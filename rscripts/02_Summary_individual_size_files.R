@@ -15,6 +15,8 @@ source(mypath("rfunctions", "misc.R"))
 #txt_files_ls = list.files(path = "./outputs/lake_individual_size", pattern="*\\.txt$", recursive = TRUE, full.names = TRUE) 
 #txt_files_df <- lapply(txt_files_ls, function(x) {read.table(file = x, header = T, sep ="")})
 #combined_df <- do.call("rbind", lapply(txt_files_df, as.data.frame)) 
+#combined_df <- combined_df[!(combined_df$code_lac == "ANN74" & combined_df$camp_annee == 2012),]
+#combined_df <- combined_df[!(combined_df$code_lac == "LEM74" & combined_df$camp_annee == 2015),]
 #write.table(combined_df, "outputs/lake_individual_size.txt", row.names = FALSE)
 #rm(txt_files_ls, txt_files_df, combined_df)
 
