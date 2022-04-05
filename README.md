@@ -1,4 +1,4 @@
-# TSR_DCELakes
+# Temperature_CSS_DCELakes
 Explore the temperature effects on community size structure with DCE data
 
 ## Content
