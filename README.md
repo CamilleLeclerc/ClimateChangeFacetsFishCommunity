@@ -1,5 +1,5 @@
 # TSR_DCELakes
-Explore the temperature-size rule with DCE data
+Explore the temperature effects on community size structure with DCE data
 
 ## Content
 This repository is structured as follow:  
