@@ -1,5 +1,5 @@
 # Temperature_CSS_DCELakes
-Explore the temperature effects on community size structure with DCE data
+Explore the temperature effects on community size structure and thus on food web stability with DCE data
 
 ## Content
 This repository is structured as follow:  
