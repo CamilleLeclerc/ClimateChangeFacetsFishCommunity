@@ -1,0 +1,67 @@
+sp_code	sp_river	sp_lake
+BRE	Abramis brama	Abramis
+BRE	Abramis brama	Abramis brama
+EST	"NA"	Acipenser ruthenus
+SPI	Alburnoides bipunctatus	Alburnoides bipunctatus
+ABL	Alburnus alburnus	Alburnus alburnus
+PCH	Ameiurus melas	Ameiurus melas
+ANG	Anguilla anguilla	Anguilla anguilla
+ASP	Aspius aspius	Leuciscus aspius
+LOF	Barbatula barbatula	Barbatula barbatula
+BAF	Barbus barbus	Barbus barbus
+BAM	Barbus meridionalis	"NA"
+BRB	Blicca bjoerkna	Blicca bjoerkna
+PRO	"NA"	Carassius auratus
+CAS	Carassius carassius	Carassius carassius
+CAR	"NA"	Carassius gibelio
+MLD	"NA"	Chelon auratus
+MLP	"NA"	Chelon ramada
+HOT	Chondrostoma nasus	Chondrostoma nasus
+TOX	Chondrostoma toxostoma	Parachondrostoma toxostoma
+LOR	Cobitis taenia	Cobitis taenia
+COR	"NA"	Coregonus lavaretus
+CHA	Cottus gobio	Cottus gobio
+CHP	Cottus petiti	"NA"	
+Cyprinidae	"NA"	Cyprinidae
+CCO	Cyprinus carpio	Cyprinus carpio
+BRO	Esox lucius	Esox lucius
+GAM	Gambusia affinis	Gambusia affinis
+EPI	Gasterosteus aculeatus	Gasterosteus aculeatus
+GOU	Gobio gobio	Gobio gobio
+GRE	Gymnocephalus cernua	Gymnocephalus cernua
+CPA	"NA"	Hypophthalmichthys molitrix
+PES	Lepomis gibbosus	Lepomis gibbosus
+ABH	Leucaspius delineatus	Leucaspius delineatus
+VAR	Leuciscus burdigalensis	Leuciscus burdigalensis
+CHE	Leuciscus cephalus	Squalius cephalus
+IDE	Leuciscus idus	Leuciscus idus
+VAN	Leuciscus leuciscus	Leuciscus leuciscus
+LOT	Lota lota	Lota lota
+BBG	Micropterus salmoides	Micropterus salmoides
+LOE	Misgurnus fossilis	"NA"	
+Mugilidae	"NA"	Mugilidae
+GTN	"NA"	Neogobius melanostomus
+TAC	Oncorhynchus mykiss	Oncorhynchus mykiss
+PAP	Pachychilon pictus	"NA"	
+PER	Perca fluviatilis	Perca fluviatilis
+Percidae	"NA"	Percidae
+VAI	Phoxinus phoxinus	Phoxinus phoxinus
+GKE	"NA"	Ponticola kessleri
+PSR	Pseudorasbora parva	Pseudorasbora parva
+EPT	Pungitius pungitius	"NA"	
+BOU	Rhodeus amarus	Rhodeus amarus
+GAR	Rutilus rutilus	Rutilus rutilus
+BLE	Salaria fluviatilis	Salaria fluviatilis
+OBL	Salvelinus alpinus	Salvelinus alpinus
+SDF	Salvelinus fontinalis	Salvelinus fontinalis
+CRI	"NA"	Salvelinus namaycush
+ROT	Scardinius erythrophtalmus	Scardinius erythrophthalmus
+SCH	"NA"	Scardinius hesperidicus
+SIL	Silurus glanis	Silurus glanis
+SAN	Stizostedion lucioperca	Sander lucioperca
+BLN	Telestes souffia	Telestes souffia
+OBR	Thymallus thymallus	Thymallus thymallus
+TAN	Tinca tinca	Tinca tinca
+TRF	Trutta fario	Salmo trutta fario
+TRF	Trutta fario	Salmo trutta lacustris
+APR	Zingel asper	"NA"	
