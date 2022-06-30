@@ -20,8 +20,9 @@ source("rfunctions/plot_code_webs.R")
 ##--------------
 ## LOAD DATASETS
 ##--------------
-myload(fish_diet_shift, ind_size, sampling_protocol, station, dir = "data")
-
+myload(sampling_protocol, station, dir = "outputs")
+myload(ind_size, dir = "outputs/IndividualSize")
+myload(fish_diet_shift, dir = "outputs/FoodWebs")
 #code_species <- unique(fish_diet_shift %>% select(species, species_name))
 #colnames(code_species) <- c("code", "latin_name")
 #write.table(code_species, "_files_to_send/codage_especes.txt", row.names = FALSE)
@@ -29,7 +30,7 @@ myload(fish_diet_shift, ind_size, sampling_protocol, station, dir = "data")
 ##--------------
 ## CODE SPECIES
 ##--------------
-code_species_river_lake <- read.delim("outputs/code_species_river_lake.txt")
+code_species_river_lake <- read.delim("outputs/FoodWebs/code_species_river_lake.txt")
 code_species_lake <- code_species_river_lake %>% select(sp_code, sp_lake) %>% drop_na(.)  
 code_species_lake$sp_lake <- gsub(" ", "_", code_species_lake$sp_lake)
 colnames(code_species_lake)[2] <- "species"
@@ -54,7 +55,7 @@ length(unique(benthic_ind_size$id_prelev_poisson))
 ##--------------
 ## BUILD THE METAWEB
 ##--------------
-myload(pred_win, fish_diet_shift, resource_diet_shift, dir = "data")
+myload(pred_win, fish_diet_shift, resource_diet_shift, dir = "outputs/FoodWebs")
 
 
 fish_diet_shift %<>%
@@ -86,7 +87,7 @@ metaweb_lake <- build_metaweb(data = benthic_ind_size,
                               na.rm = TRUE,
                               replace_min_by_one = FALSE)
 
-mysave(metaweb_lake, dir = "data", overwrite = TRUE)
+mysave(metaweb_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 #size_class <- as.data.frame(metaweb_lake$size_class)
 #head(size_class)

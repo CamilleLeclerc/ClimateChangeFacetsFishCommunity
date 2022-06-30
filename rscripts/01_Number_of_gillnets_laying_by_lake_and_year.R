@@ -69,6 +69,6 @@ for (i in 1:length(unique(db.fish$code_lac))){
 
 rm(sub_data, sub_sampling_effort_benthic, sub_sampling_effort_pelagic, subset_data, subset_data_benthic, subset_data_pelagic, i, j)
 
-write.table(sampling_effort_benthic, "_FW_reconstruction/Bonnaffe-Danet_method/outputs/lake_number_gillnets_benthic.txt", row.names = FALSE)
-write.table(sampling_effort_pelagic, "_FW_reconstruction/Bonnaffe-Danet_method/outputs/lake_number_gillnets_pelagic.txt", row.names = FALSE)
+write.table(sampling_effort_benthic, "outputs/lake_number_gillnets_benthic.txt", row.names = FALSE)
+write.table(sampling_effort_pelagic, "outputs/lake_number_gillnets_pelagic.txt", row.names = FALSE)
 

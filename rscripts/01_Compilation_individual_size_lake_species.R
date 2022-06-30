@@ -141,7 +141,7 @@ for (i in 1:length(unique(sub.db.fish$code_lac))){
     df.size$heure_pose <- gsub(":", ".", paste(df.size$heure_pose))
     df.size$heure_releve <- gsub(":", ".", paste(df.size$heure_releve))
     df.size.final <- apply(df.size,2,as.character)
-    write.table(df.size.final, paste0("outputs/lake_individual_size/Indsize_", unique(sub.year$code_lac), "_", unique(sub.year$camp_annee),".txt"), row.names = FALSE)
+    write.table(df.size.final, paste0("outputs/IndividualSize/individual_files_LakeIndSize/Indsize_", unique(sub.year$code_lac), "_", unique(sub.year$camp_annee),".txt"), row.names = FALSE)
     
   }
 }

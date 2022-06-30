@@ -87,7 +87,7 @@ write.table(lake_dataset, "outputs/lake_dataset.txt", row.names = FALSE)
 
 
 lake_list <- db.fish %>% select(code_lac, camp_annee, id_campagne) %>% unique(.)
-write.table(lake_list, "_FW_reconstruction/Bonnaffe-Danet_method/outputs/lake_list.txt", row.names = FALSE)
+write.table(lake_list, "outputs/lake_list.txt", row.names = FALSE)
 
 
 worldmap <- ne_countries(continent = 'europe', scale = 'large', type = 'countries', returnclass = 'sf')

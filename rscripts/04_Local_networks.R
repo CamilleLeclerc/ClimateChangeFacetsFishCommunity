@@ -27,7 +27,7 @@ myload(ind_size, metaweb_lake, sampling_protocol, station, dir = "data")
 ##------------------
 ## GET LOCAL NETWORK
 ##------------------
-code_species_river_lake <- read.delim("outputs/code_species_river_lake.txt")
+code_species_river_lake <- read.delim("outputs/FoodWebs/code_species_river_lake.txt")
 code_species_lake <- code_species_river_lake %>% select(sp_code, sp_lake) %>% drop_na(.)  
 code_species_lake$sp_lake <- gsub(" ", "_", code_species_lake$sp_lake)
 colnames(code_species_lake)[2] <- "species"
@@ -78,7 +78,7 @@ network_lake %>%
   unnest(data) %>%
   filter(is.na(class_id))
 
-mysave(network_lake, dir = "data", overwrite = TRUE)
+mysave(network_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 
 ##--------------
@@ -148,11 +148,11 @@ network_lake %<>% mutate(obs_troph_level = map(troph, function(x) { out <- tibbl
 
 network_lake_metrics %<>% left_join(select(network_lake, id_campagne, obs_troph_level, max_troph_lvl), by = "id_campagne")
 
-mysave(network_lake_metrics, dir = "data", overwrite = TRUE)
+mysave(network_lake_metrics, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 
 # Compute weighted average trophic level
-myload(weight_fish_lake, dir = "data")
+myload(weight_fish_lake, dir = "outputs/FoodWebs")
 
 
 size_class_weight_lake <- assign_size_class(data = weight_fish_lake %>%
@@ -184,4 +184,4 @@ if ("w_trph_lvl_avg" %in% colnames(network_lake_metrics)) {
 network_lake_metrics %<>%
   left_join(weighted_trophic_lvl, by = "id_campagne")
 
-mysave(network_lake_metrics, dir = "data", overwrite = TRUE)
+mysave(network_lake_metrics, dir = "outputs/FoodWebs", overwrite = TRUE)
