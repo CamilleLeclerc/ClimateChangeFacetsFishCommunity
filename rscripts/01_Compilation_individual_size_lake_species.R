@@ -1,5 +1,3 @@
-rm(list=ls())
-
 ##----------------------------
 ## LOAD PACKAGES AND FUNCTIONS
 ##----------------------------
@@ -19,10 +17,10 @@ db.fish <- read.csv("data/fish_data.csv") #fish_data.csv is too large to be on g
 ## DATASET EXPLORATION
 ##--------------------
 head(db.fish)
+nrow(db.fish)
 
-  ##Focused period for the project is 2005 - 2018
+  ##Period available
   sort(unique(db.fish$camp_annee))
-
 
   ##Rename fish name
   length(unique(db.fish$code_lac))
