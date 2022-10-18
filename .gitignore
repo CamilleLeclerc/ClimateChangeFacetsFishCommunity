@@ -10,4 +10,5 @@
 
 # Large files
 data/fish_data.csv
+data/lake_temperature/
 outputs/IndividualSize/lake_individual_size.txt
