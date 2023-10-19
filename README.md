@@ -1,5 +1,5 @@
-# Temperature_CSS_FWStability_DCELakes
-Explore the temperature effects on community size structure and thus on food web stability with DCE data
+# ClimateChangeFacetsFishCommunity
+Examine how climate change affects freshwater fish communities by using a multifaceted approach to characterize both climate change and freshwater fish community. 
 
 ## Content
 This repository is structured as follow:  
