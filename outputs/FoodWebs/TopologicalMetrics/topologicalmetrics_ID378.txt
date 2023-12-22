@@ -1,0 +1,2 @@
+"Fish.rich" "Nodes" "Fish.size" "No.links" "Link.dens" "Connect" "Gen" "Vul" "Gen.SD" "Vul.SD" "Frac.bas" "Frac.int" "Frac.top" "Max.sim" "MFCL" "MeanTL" "MaxTL" "Cluster.coef" "Modular" "PredatorOverlap"
+"378" 5 20 17.0098039215686 50 2.5 0.125 3.125 3.57142857142857 2.18848661960966 2.52357307257618 0.2 0.5 0.3 0.654914215686275 4.01869158878505 2.5375 3.75 0.197674418604651 0.2046 0.441666666666667

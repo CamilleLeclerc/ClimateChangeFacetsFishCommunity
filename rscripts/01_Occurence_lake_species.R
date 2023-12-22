@@ -60,22 +60,19 @@ db.fish %>%
   #filter(nom_latin_taxon %in% sp.to.check) %>%
   select(nom_latin_taxon, code_lac) %>%
   unique(.) %>%
-  group_by(nom_latin_taxon ) %>%
-  summarise(occurrence = n()) %>%
-  knitr::kable()
+  na.omit(.) %>% 
+  group_by(nom_latin_taxon) %>%
+  summarise(occurrence = n())
 
 
 ##----------------------------------
 ## LIST OF LAKES WHERE SPECIES OCCUR
 ##----------------------------------
 db.fish %>%
-  #filter(nom_latin_taxon %in% sp.to.check) %>%
   select(nom_latin_taxon, code_lac) %>%
   unique(.) %>%
-  mutate(present = 1) %>%
-  pivot_wider(names_from = nom_latin_taxon, values_from = present) %>%
-  #mutate_at(vars(sp.to.check), ~ifelse(is.na(.), 0, 1)) %>%
-  knitr::kable()
+  mutate(present = 1)
+
 
 ##--------------------------------------
 ## PLOT OF LAKES WHERE THE SPECIES OCCUR
@@ -89,27 +86,3 @@ write.table(lake_dataset, "outputs/lake_dataset.txt", row.names = FALSE)
 lake_list <- db.fish %>% select(code_lac, camp_annee, id_campagne) %>% unique(.)
 write.table(lake_list, "outputs/lake_list.txt", row.names = FALSE)
 
-
-worldmap <- ne_countries(continent = 'europe', scale = 'large', type = 'countries', returnclass = 'sf')
-francemap <- ne_countries(country = 'france', scale = 'large', type = 'countries', returnclass = 'sf')
-
-
-ggplot() +
-  geom_sf(data = worldmap, fill = "#ffffff", color = "#000000", size = 0.05) +
-  geom_sf(data = francemap, fill = "#d9d9d9", color = "#000000", size = 0.25) +
-  geom_point(data = lake_dataset  %>%
-                      #filter(taxon %in% sp.to.check) %>%
-                      select(nom_latin_taxon, lat_pla, long_pla) %>%
-                      unique(.),
-             aes(x = long_pla, y = lat_pla), shape = 21, colour = "#000000", fill = "#9e0142", size = 1) +
-  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
-  facet_wrap(~ nom_latin_taxon) +
-  theme(title = element_text(),
-        plot.title = element_text(margin = margin(20,20,20,20), size = 18, hjust = 0.5),
-        axis.text.x = element_blank(), axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title.x = element_blank(),  axis.title.y = element_blank(),
-        panel.grid.major = element_blank(), panel.background = element_blank(),
-        strip.background = element_rect(fill = "#000000", color = "#000000", size = 1, linetype = "solid"),
-        strip.text.x = element_text(size = 12, color = "#ffffff", face = "bold"),
-        panel.border = element_rect(colour = "#000000", fill = NA, size = 1)) 

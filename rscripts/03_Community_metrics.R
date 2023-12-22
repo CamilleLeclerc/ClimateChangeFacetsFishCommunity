@@ -48,8 +48,9 @@ colnames(code_species_lake)[2] <- "species"
 ind_size <- left_join(ind_size, code_species_lake, by = "species")
 ind_size <- ind_size[,c(1:5, 8, 7)]
 colnames(ind_size)[6] <- "species"
+ind_size <- ind_size %>% dplyr::filter(fish >= 25 & fish <= 965)
 
-benthic_sampling_protocol <- sampling_protocol %>% filter(cd_engin_peche == "FB")
+benthic_sampling_protocol <- sampling_protocol #%>% filter(cd_engin_peche == "FB")
 length(unique(benthic_sampling_protocol$id_campagne))
 length(unique(benthic_sampling_protocol$id_prelev_poisson))
 length(unique(benthic_sampling_protocol$id_point_prelev))
