@@ -12,6 +12,7 @@
 data/fish_data.csv
 data/lake_temperature/
 outputs/IndividualSize/lake_individual_size.txt
+data/plan_deau_lacs_caracteristiques.csv
 
 # scripts and associated files
 rscripts/01_Number_of_gillnets_laying_by_lake_and_year.R
