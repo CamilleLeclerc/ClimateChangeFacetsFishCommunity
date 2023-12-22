@@ -5,12 +5,12 @@
 ## Repository overview
 This repository is structured as follow:
 
-:file_folder: [**FoodWebsRiverLake/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity) *(root of the compendium)*  
+:file_folder: [** ClimateChangeFacetsFishCommunity/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity) *(root of the compendium)*  
 ├── :file_folder: [**data/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/master/data) *(contains raw-data (read-only and should never be changed))*     
 ├── :file_folder: [**doc/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/main/doc) *(contains documents related to the project (e.g., pdf from an .Rmd file))*  
-├── :file_folder: [**statistical_analysis/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/main/outputs) *(contains all intermediate and final results sorted by topic)*   
-├── :file_folder: [**R/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/main/rfunctions) *(contains the R functions developed for this project)*  
-└── :file_folder: [**vignettes/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/master/rscripts) *(contains R scripts organized by topic for running specific analysis)*  
+├── :file_folder: [**outputs/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/main/outputs) *(contains all intermediate and final results sorted by topic)*   
+├── :file_folder: [**rfunctions/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/main/rfunctions) *(contains the R functions developed for this project)*  
+└── :file_folder: [**rscripts/**](https://github.com/CamilleLeclerc/ClimateChangeFacetsFishCommunity/tree/master/rscripts) *(contains R scripts organized by topic for running specific analysis)*  
 <br />
 
 ## Running instructions
