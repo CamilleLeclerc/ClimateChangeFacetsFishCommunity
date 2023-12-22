@@ -12,3 +12,8 @@
 data/fish_data.csv
 data/lake_temperature/
 outputs/IndividualSize/lake_individual_size.txt
+
+# scripts and associated files
+rscripts/01_Number_of_gillnets_laying_by_lake_and_year.R
+outputs/lake_number_gillnets_benthic.txt
+outputs/lake_number_gillnets_pelagic.txt
