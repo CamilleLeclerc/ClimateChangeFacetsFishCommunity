@@ -95,15 +95,12 @@ piecewiseSEM:::plot.psem(
 #https://murphymv.github.io/semEff/articles/semEff.html
 
 thermtraj.sem <- list(
-  lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  #glmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data, family = poisson),
-  lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data),
-  #glmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data, family = poisson),
-  lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data)
+  lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
+  lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
+  lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  lmer(fish.richness ~ nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  lmer(nis.richness ~ bio1.slope.40y + (1 | lake.code), data = data)
 )
 
 
@@ -126,7 +123,6 @@ summary(thermtraj.sem.eff, response = "ols.slope")
 summary(thermtraj.sem.eff, response = "ols.elevation")
 summary(thermtraj.sem.eff, response = "fish.richness")
 summary(thermtraj.sem.eff, response = "nis.richness")
-summary(thermtraj.sem.eff, response = "bio1.current")
 
 #preparation dataset to plot figure about effects
 response.connect <- as.data.frame(thermtraj.sem.eff$Summary$connect)
@@ -212,21 +208,9 @@ colnames(response.nis.richness) <- c("Predictor", "Response", "Type", "Effect", 
 response.nis.richness[2, 3] <- "DIRECT" 
 response.nis.richness[5, 3] <- "TOTAL"    
 
-response.bio1.current <- as.data.frame(thermtraj.sem.eff$Summary$bio1.current)
-head(response.bio1.current)
-response.bio1.current <- response.bio1.current[, -c(3, 5, 7, 9, 12)]
-response.bio1.current <- response.bio1.current %>% slice(-c(1, 3:5, 7:8))
-colnames(response.bio1.current)[1] <- "Type"
-colnames(response.bio1.current)[2] <- "Predictor"
-colnames(response.bio1.current)[8] <- "Sym.sign"
-response.bio1.current$Response <- "bio1.current"
-response.bio1.current <- response.bio1.current %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
-colnames(response.bio1.current) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-
 data.effect <- rbind(response.connect, response.maxtl,
                      response.ols.slope, response.ols.elevation,
-                     response.fish.richness, response.nis.richness,
-                     response.bio1.current)
+                     response.fish.richness, response.nis.richness)
 str(data.effect)
 data.effect$Predictor <- str_replace(data.effect$Predictor, "AsIs", "")
 data.effect$Predictor <- str_split(data.effect$Predictor, ",") %>% sapply(as.character)
@@ -257,7 +241,6 @@ data.effect[data.effect == "ols.slope"] <- "Slope"
 data.effect[data.effect == "ols.elevation"] <- "Elevation"
 data.effect[data.effect == "fish.richness"] <- "Total species richness"
 data.effect[data.effect == "nis.richness"] <- "Non-indigenous species richness"
-data.effect[data.effect == "bio1.current"] <- "Current climatic conditions"
 data.effect[data.effect == "bio1.slope.40y"] <- "Climate warming"
 
 data.effect[data.effect == "connect       "] <- "Connectance"
@@ -266,7 +249,6 @@ data.effect[data.effect == "ols.slope     "] <- "Slope"
 data.effect[data.effect == "ols.elevation "] <- "Elevation"
 data.effect[data.effect == "fish.richness "] <- "Total species richness"
 data.effect[data.effect == "nis.richness  "] <- "Non-indigenous species richness"
-data.effect[data.effect == "bio1.current  "] <- "Current climatic conditions"
 
 data.effect[data.effect == "DIRECT"] <- "Direct"
 data.effect[data.effect == "INDIRECT"] <- "Indirect"
@@ -276,7 +258,7 @@ data.effect[data.effect == "INDIRECT "] <- "Indirect"
 data.effect[data.effect == "TOTAL    "] <- "Total"
 
 str(data.effect)
-data.effect$Response <- factor(data.effect$Response, levels = c('Maximum trophic level', 'Connectance', 'Elevation', 'Slope', 'Total species richness', 'Non-indigenous species richness', 'Current climatic conditions'), ordered = TRUE) 
+data.effect$Response <- factor(data.effect$Response, levels = c('Maximum trophic level', 'Connectance', 'Elevation', 'Slope', 'Total species richness', 'Non-indigenous species richness'), ordered = TRUE) 
 
 all.combination <- data.effect %>% dplyr::select(Predictor, Response) %>% unique(.)
 indirect.effect <- data.effect %>% dplyr::filter(Type == "Indirect")
@@ -296,7 +278,7 @@ data.effect <- data.effect %>% mutate(position = if_else(Effect > 0, UpperCI + 0
 
 
 #figure about all effects (total, indirect, direct)
-pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
+pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climate warming"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
