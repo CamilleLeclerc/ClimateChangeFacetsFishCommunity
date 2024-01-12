@@ -398,7 +398,7 @@ pTAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Clim
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -424,7 +424,7 @@ pNISR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Non-
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -450,7 +450,7 @@ pTSR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Total
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -476,7 +476,7 @@ pSlope <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Slo
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
