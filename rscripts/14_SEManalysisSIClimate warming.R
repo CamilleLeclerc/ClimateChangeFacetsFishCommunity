@@ -95,12 +95,12 @@ piecewiseSEM:::plot.psem(
 #https://murphymv.github.io/semEff/articles/semEff.html
 
 thermtraj.sem <- list(
-  lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
-  lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
-  lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
-  lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
-  lmer(fish.richness ~ nis.richness + bio1.slope.40y + (1|lake.code), data = data),
-  lmer(nis.richness ~ bio1.slope.40y + (1 | lake.code), data = data)
+  connect = lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
+  maxtl = lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + (1|lake.code), data = data),
+  ols.slope = lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  ols.elevation = lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  fish.richness = lmer(fish.richness ~ nis.richness + bio1.slope.40y + (1|lake.code), data = data),
+  nis.richness = lmer(nis.richness ~ bio1.slope.40y + (1 | lake.code), data = data)
 )
 
 
@@ -128,85 +128,83 @@ summary(thermtraj.sem.eff, response = "nis.richness")
 response.connect <- as.data.frame(thermtraj.sem.eff$Summary$connect)
 head(response.connect)
 response.connect <- response.connect[, -c(3, 5, 7, 9, 12)]
-response.connect <- response.connect %>% slice(-c(1, 8, 13, 20:25))
+response.connect <- response.connect %>% slice(-c(1, 7, 11, 17:21))
 colnames(response.connect)[1] <- "Type"
 colnames(response.connect)[2] <- "Predictor"
 colnames(response.connect)[8] <- "Sym.sign"
 response.connect$Response <- "connect"
 response.connect <- response.connect %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.connect) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.connect[2:6, 3] <- "DIRECT" 
-response.connect[8:10, 3] <- "INDIRECT"  
-response.connect[12:16, 3] <- "TOTAL"    
+response.connect[2:5, 3] <- "DIRECT" 
+response.connect[7:8, 3] <- "INDIRECT"  
+response.connect[10:13, 3] <- "TOTAL"    
 
 response.maxtl <- as.data.frame(thermtraj.sem.eff$Summary$maxtl)
 head(response.maxtl)
 response.maxtl <- response.maxtl[, -c(3, 5, 7, 9, 12)]
-response.maxtl <- response.maxtl %>% slice(-c(1, 9, 16, 24:30))
+response.maxtl <- response.maxtl %>% slice(-c(1, 8, 14, 21:26))
 colnames(response.maxtl)[1] <- "Type"
 colnames(response.maxtl)[2] <- "Predictor"
 colnames(response.maxtl)[8] <- "Sym.sign"
 response.maxtl$Response <- "maxtl"
 response.maxtl <- response.maxtl %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.maxtl) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.maxtl[2:7, 3] <- "DIRECT" 
-response.maxtl[9:13, 3] <- "INDIRECT"  
-response.maxtl[15:20, 3] <- "TOTAL"   
+response.maxtl[2:6, 3] <- "DIRECT" 
+response.maxtl[8:11, 3] <- "INDIRECT"  
+response.maxtl[13:17, 3] <- "TOTAL"   
 
 response.ols.slope <- as.data.frame(thermtraj.sem.eff$Summary$ols.slope)
 head(response.ols.slope)
 response.ols.slope <- response.ols.slope[, -c(3, 5, 7, 9, 12)]
-response.ols.slope <- response.ols.slope %>% slice(-c(1, 6, 10, 15:18))
+response.ols.slope <- response.ols.slope %>% slice(-c(1, 5, 8, 12:14))
 colnames(response.ols.slope)[1] <- "Type"
 colnames(response.ols.slope)[2] <- "Predictor"
 colnames(response.ols.slope)[8] <- "Sym.sign"
 response.ols.slope$Response <- "ols.slope"
 response.ols.slope <- response.ols.slope %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.ols.slope) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.ols.slope[2:4, 3] <- "DIRECT" 
-response.ols.slope[6:7, 3] <- "INDIRECT"  
-response.ols.slope[9:11, 3] <- "TOTAL"    
+response.ols.slope[2:3, 3] <- "DIRECT" 
+response.ols.slope[5, 3] <- "INDIRECT"  
+response.ols.slope[7:8, 3] <- "TOTAL"    
 
 response.ols.elevation <- as.data.frame(thermtraj.sem.eff$Summary$ols.elevation)
 head(response.ols.elevation)
 response.ols.elevation <- response.ols.elevation[, -c(3, 5, 7, 9, 12)]
-response.ols.elevation <- response.ols.elevation %>% slice(-c(1, 6, 10, 15:18))
+response.ols.elevation <- response.ols.elevation %>% slice(-c(1, 5, 8, 12:14))
 colnames(response.ols.elevation)[1] <- "Type"
 colnames(response.ols.elevation)[2] <- "Predictor"
 colnames(response.ols.elevation)[8] <- "Sym.sign"
 response.ols.elevation$Response <- "ols.elevation"
 response.ols.elevation <- response.ols.elevation %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.ols.elevation) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.ols.elevation[2:4, 3] <- "DIRECT" 
-response.ols.elevation[6:7, 3] <- "INDIRECT"  
-response.ols.elevation[9:11, 3] <- "TOTAL"    
+response.ols.elevation[2:3, 3] <- "DIRECT" 
+response.ols.elevation[5, 3] <- "INDIRECT"  
+response.ols.elevation[7:8, 3] <- "TOTAL"    
 
 response.fish.richness <- as.data.frame(thermtraj.sem.eff$Summary$fish.richness)
 head(response.fish.richness)
 response.fish.richness <- response.fish.richness[, -c(3, 5, 7, 9, 12)]
-response.fish.richness <- response.fish.richness %>% slice(-c(1, 5, 8, 12:14))
+response.fish.richness <- response.fish.richness %>% slice(-c(1, 4, 6, 9:10))
 colnames(response.fish.richness)[1] <- "Type"
 colnames(response.fish.richness)[2] <- "Predictor"
 colnames(response.fish.richness)[8] <- "Sym.sign"
 response.fish.richness$Response <- "fish.richness"
 response.fish.richness <- response.fish.richness %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.fish.richness) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.fish.richness[2:3, 3] <- "DIRECT" 
-response.fish.richness[5, 3] <- "INDIRECT"  
-response.fish.richness[7:8, 3] <- "TOTAL"    
+response.fish.richness[2, 3] <- "DIRECT" 
+response.fish.richness[5, 3] <- "TOTAL"    
 
 response.nis.richness <- as.data.frame(thermtraj.sem.eff$Summary$nis.richness)
 head(response.nis.richness)
 response.nis.richness <- response.nis.richness[, -c(3, 5, 7, 9, 12)]
-response.nis.richness <- response.nis.richness %>% slice(-c(1, 4, 6, 9:10))
+response.nis.richness <- response.nis.richness %>% slice(-c(1, 3:5, 7:8))
 colnames(response.nis.richness)[1] <- "Type"
 colnames(response.nis.richness)[2] <- "Predictor"
 colnames(response.nis.richness)[8] <- "Sym.sign"
 response.nis.richness$Response <- "nis.richness"
 response.nis.richness <- response.nis.richness %>% dplyr::select('Predictor', 'Response', 'Type', 'Effect', 'Bias', 'Std. Err.', 'Lower CI', 'Upper CI', 'Sym.sign')
 colnames(response.nis.richness) <- c("Predictor", "Response", "Type", "Effect", "Bias", "StdErr", "LowerCI", "UpperCI", "SymbSign")
-response.nis.richness[2, 3] <- "DIRECT" 
-response.nis.richness[5, 3] <- "TOTAL"    
+
 
 data.effect <- rbind(response.connect, response.maxtl,
                      response.ols.slope, response.ols.elevation,
@@ -277,149 +275,8 @@ data.effect$significant[data.effect$SymbSign == ""] <- FALSE
 data.effect <- data.effect %>% mutate(position = if_else(Effect > 0, UpperCI + 0.02, LowerCI - 0.02))
 
 
-#figure about all effects (total, indirect, direct)
-pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climate warming"),
-                aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-    theme(legend.position = "none",
-          axis.text = element_text(size = 14, colour = "#000000"),
-          axis.title = element_text(size = 16, face = "bold", colour = "#000000")) 
-pCAMT
-
-
-pTAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climate warming"),
-                aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
-pTAMT
-
-
-pNISR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Non-indigenous species richness"),
-                aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
-pNISR
-
-
-pTSR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Total species richness"),
-                aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
-pTSR
-
-
-pSlope <- ggplot(data.effect %>% dplyr::filter(Predictor == "Slope"),
-               aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#edae49") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
-pSlope
-
-
-pMP <- ggplot(data.effect %>% dplyr::filter(Predictor == "Elevation"),
-                 aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#edae49") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effect size", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
-pMP
-
-
-
-ggarrange(pCAMT, pTAMT, 
-          pNISR, pTSR,
-          pSlope, pMP,
-          labels = c("A", "B", "C", "D", "E", "F"),
-          ncol = 2, nrow = 3,
-          common.legend = TRUE, legend="bottom")
-
-plot_grid(pCAMT, pTAMT, 
-          pNISR, pTSR,
-          pSlope, pMP,
-          labels = c("A", "B", "C", "D", "E", "F"),
-          ncol = 2, nrow = 3, align = "hv")
-
-#landscape 10x15
-
-
-
-
-
-
 #figure about total effects
 data.total.effect <- data.effect %>% dplyr::filter(Type == "Total")
-
-
-pCAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
-                aes(x = Effect, y = Response)) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000")) 
-pCAMT
 
 
 pTAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Climate warming"),
@@ -429,7 +286,7 @@ pTAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Climate warmin
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -446,7 +303,7 @@ pNISR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Non-indigenous
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -463,7 +320,7 @@ pTSR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Total species r
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -480,7 +337,7 @@ pSlope <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Slope"),
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -497,7 +354,7 @@ pMP <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Elevation"),
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized total effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -508,7 +365,7 @@ pMP
 
 
 
-plot_grid(pCAMT, pTAMT, 
+plot_grid(pTAMT, pTAMT, 
           pNISR, pTSR,
           pSlope, pMP,
           labels = c("A", "B", "C", "D", "E", "F"),
@@ -526,32 +383,6 @@ plot_grid(pCAMT, pTAMT,
 data.direct.indirect.effect <- data.effect %>% dplyr::filter(!Type == "Total")
 
 
-pCAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
-                aes(x = Effect, y = Response, pattern = factor(Type))) +
-  geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
-  #geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
-  geom_bar_pattern(stat='identity', position = position_dodge(preserve = "single"),
-                   color = "black", 
-                   pattern_fill = "black",
-                   fill = "#8d96a3",
-                   pattern_angle = 45,
-                   pattern_density = 0.1,
-                   pattern_spacing = 0.025,
-                   pattern_key_scale_factor = 0.6) + 
-  geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
-  geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
-  labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
-  coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
-  scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000")) 
-pCAMT
-
-
 pTAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Climate warming"),
                 aes(x = Effect, y = Response, pattern = factor(Type))) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
@@ -567,7 +398,7 @@ pTAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Clim
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -593,7 +424,7 @@ pNISR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Non-
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -619,7 +450,7 @@ pTSR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Total
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -645,7 +476,7 @@ pSlope <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Slo
   geom_errorbar(aes(xmin = LowerCI, xmax = UpperCI, fill = Type), position = position_dodge(0.75), width = 0.25, fill = "black") +
   geom_text(aes(label = ifelse(significant, "*", ""), x = position, fill = Type), position = position_dodge(0.75), size = 20 / .pt) +
   labs(x = "Standardized effects", y = "Reponse variable") +
-  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.627), position = "top") +
+  scale_x_continuous(breaks = c(-0.4, -0.2, 0, 0.2, 0.4, 0.6), limits = c(-0.4, 0.7), position = "top") +
   coord_flex_cart(left=brackets_vertical(), top = capped_horizontal('both')) +
   scale_pattern_manual(values = c(Indirect = "stripe", Direct = "none")) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
@@ -683,7 +514,7 @@ pMP
 
 
 
-plot_grid(pCAMT, pTAMT, 
+plot_grid(pTAMT, pTAMT, 
           pNISR, pTSR,
           pSlope, pMP,
           labels = c("A", "B", "C", "D", "E", "F"),

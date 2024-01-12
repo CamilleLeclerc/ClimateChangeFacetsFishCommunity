@@ -101,9 +101,7 @@ thermtraj.sem <- list(
   lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
   lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
   lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  #glmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data, family = poisson),
   lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data),
-  #glmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data, family = poisson),
   lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data)
 )
 
