@@ -42,6 +42,9 @@ myload(dataset_9BSCBenthicPelagicGillnetSelectivity,
 ##----------------
 summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
 dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
+count.per.lake <- dataset.thermal.trajectories %>% group_by(lake.code) %>% 
+  summarise(total_count = n(),.groups = 'drop') %>%
+  as.data.frame()
 
 
 ##------------------------------
@@ -62,19 +65,24 @@ francelakes <- st_intersection(st_as_sf(lakes), st_as_sf(francemap))
 francerivers <- st_intersection(st_as_sf(rivers), st_as_sf(francemap))
 
 coord <- dataset.thermal.trajectories %>% dplyr::select(lake.code, lat, long) %>% unique(.)
+coord <- left_join(coord, count.per.lake, by = 'lake.code')
+str(coord)
+coord$total_count <- as.factor(coord$total_count)
 
+ 
 map <- ggplot() +
   geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
   geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
   geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
   geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) +  
-  geom_point(data = coord, aes(x = long, y = lat), shape = 21, colour = "black", fill = gray(0.4), size = 1.75) +
+  geom_point(data = coord, aes(x = long, y = lat, fill = total_count), shape = 21, colour = "black", size = 1.75) +
   annotation_scale(location = "bl", width_hint = 0.1) +
   annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
   coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
+  scale_fill_manual(values = c("#7fc97f", "#beaed4", "#fdc086", "#ffff99")) +
   map_theme +
   theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
         strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1))
+        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
 map
 #5 x 5

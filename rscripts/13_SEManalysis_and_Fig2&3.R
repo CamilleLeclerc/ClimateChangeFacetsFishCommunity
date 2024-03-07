@@ -61,8 +61,8 @@ thermtraj_lme <- list(
   ols.slope = lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
   ols.elevation = lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
   fish.richness = lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
-  nis.richness = lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data),
-  bio1.current = lmer(bio1.current ~ bio1.slope.40y + (1 | lake.code), data = data)
+  nis.richness = lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  bio1.current = lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data)
 )
 
 
