@@ -14,6 +14,7 @@ library(ggplot2)
 library(ggpubr)
 library(kableExtra)
 library(lemon)
+library(lme4)
 library(purrr)
 library(rstatix)
 library(stringr)
@@ -35,7 +36,7 @@ myload(dataset_9BSCBenthicPelagicGillnetSelectivity,
 ## PREPARE DATASET
 ##----------------
 summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
-dataset_9BSCBenthicPelagicGillnetSelectivity <- dataset_9BSCBenthicPelagicGillnetSelectivity
+dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
 
 
 ##----------------------------------
@@ -170,7 +171,7 @@ pmaxtl
 ##----------------------------------------------------
 ## HISTOGRAM SIZE OF NON-INDIGENOUS/INDIGENOUS SPECIES
 ##----------------------------------------------------
-myload(ind_size, dir = "./B_Thermal_trajectories/data")
+myload(ind_size, dir = "./outputs/IndividualSize")
 ind_size$species <- sub("_", " ", ind_size$species)
 ind_size$species[ind_size$species == "Salmo trutta_fario"] <- "Salmo trutta"
 ind_size$species[ind_size$species == "Salmo trutta_lacustris"] <- "Salmo trutta"
@@ -178,7 +179,7 @@ ind_size$species[ind_size$species == "Abramis"] <- "Abramis brama"
 ind_size <- ind_size %>% filter(!(species %in% c("Hybride br�me-gardon","Hybrides de_cyprinid�s", "Percidae", "Cyprinidae", "Mugilidae")))
 ind_size <- ind_size %>% filter(!(id_campagne %in% c(44, 515)))
 ind_size <- ind_size %>% dplyr::filter(fish >= 25 & fish <= 965)
-dfspeciestype <- read.delim("./B_Thermal_trajectories/data/Species_type.txt")
+dfspeciestype <- read.delim("./data/Species_type.txt")
 colnames(dfspeciestype)[1] <- "species"
 
 
@@ -235,6 +236,13 @@ ind_size %>%
   add_significance()
 
 ind_size %>% wilcox_effsize(fish ~ type, paired = FALSE)
+mod.size <- glm(fish ~ type, family = Gamma(inverse), data = ind_size)
+summary(mod.size)
+#mod.size.diag <- glm.diag(mod.size)
+#glm.diag.plots(mod.size, mod.size.diag)
+#str(ind_size)
+#ind_size$code_lac <- as.factor(ind_size$code_lac)
+#summary(glmer(fish ~ type + (1|code_lac), family = Gamma, data = ind_size))
 
 #ggarrange(pTemp, psizespecies, 
 #          pslope, pmidpoint,
