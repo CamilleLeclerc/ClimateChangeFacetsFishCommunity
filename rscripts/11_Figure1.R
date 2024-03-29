@@ -5,6 +5,7 @@ rm(list = ls()) #Removes all objects from the current workspace (R memory)
 ##LOADING PACKAGES AND FUNCTIONS
 ##------------------------------
 ##PACKAGES##
+library(biscale)
 library(cowplot)
 library(dplyr)
 library(ggbeeswarm)
@@ -12,17 +13,23 @@ library(ggbreak)
 library(ggh4x)
 library(ggplot2)
 library(ggpubr)
+library(ggspatial)
 library(kableExtra)
 library(lemon)
 library(lme4)
 library(purrr)
+library(rnaturalearth)
 library(rstatix)
+library(sf)
 library(stringr)
 library(tidyr)
+library(tidyverse)
+library(watina)
 
 
 ##FUNCTIONS##
 source("./rfunctions/misc.R")
+source("./rfunctions/theme_map.R")
 
 
 ##--------------
@@ -42,22 +49,74 @@ dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
 ##----------------------------------
 ## CORRELATION TEMPERATURE VARIABLES
 ##----------------------------------
-pTemp <- dataset.thermal.trajectories %>%
-  ggplot(aes(y = bio1.current, x = bio1.slope.40y*10)) +
-  geom_point(size = 4, stroke = 1.5, color = "#8d96a3", fill = "#8d96a3", alpha = 0.75) +
-  geom_smooth(method = lm, fill = "#626972", color = "#626972", alpha = 0.25) +
-  labs(y = "Current annual\nmean temperature (°C)", x = "Trend in annual mean temperature (°C/dec)") +
-  scale_x_continuous(breaks = c(-0.2, 0, 0.2, 0.4, 0.6, 0.8), limits = c(-0.2, 0.8)) +
-  scale_y_continuous(breaks = c(5, 10, 15, 20), limits = c(5, 20)) +
-  coord_capped_cart(bottom = 'both', left = 'both') +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000")) +
-  stat_cor(method = "pearson")
-pTemp
+#pTemp <- dataset.thermal.trajectories %>%
+#  ggplot(aes(y = bio1.current, x = bio1.slope.40y*10)) +
+#  geom_point(size = 4, stroke = 1.5, color = "#8d96a3", fill = "#8d96a3", alpha = 0.75) +
+#  geom_smooth(method = lm, fill = "#626972", color = "#626972", alpha = 0.25) +
+#  labs(y = "Current annual\nmean temperature (°C)", x = "Trend in annual mean temperature (°C/dec)") +
+#  scale_x_continuous(breaks = c(-0.2, 0, 0.2, 0.4, 0.6, 0.8), limits = c(-0.2, 0.8)) +
+#  scale_y_continuous(breaks = c(5, 10, 15, 20), limits = c(5, 20)) +
+#  coord_capped_cart(bottom = 'both', left = 'both') +
+#  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
+#  theme_classic() + 
+#  theme(legend.position = "none",
+#        axis.text = element_text(size = 14, colour = "#000000"),
+#        axis.title = element_text(size = 16, face = "bold", colour = "#000000")) +
+#  stat_cor(method = "pearson")
+#pTemp
 
+worldmap <- ne_countries(continent = 'europe', scale = 'large', type = 'countries', returnclass = 'sf')
+fr <- data.frame(Country = "France", Focus = "YES") 
+world_joined <- left_join(worldmap, fr, by = c("name" = "Country"))
+
+francemap <- ne_countries(country = 'france', scale = 'large', type = 'countries', returnclass = 'sf')
+
+lakes <- ne_download(scale = 10, type = 'lakes', category = 'physical')
+
+rivers <- ne_download(scale = 10, type = 'rivers_lake_centerlines', category = 'physical')
+
+sf::sf_use_s2(FALSE)
+francelakes <- st_intersection(st_as_sf(lakes), st_as_sf(francemap))
+francerivers <- st_intersection(st_as_sf(rivers), st_as_sf(francemap))
+
+coord <- dataset.thermal.trajectories %>%
+  group_by(lake.code) %>%
+  dplyr::summarize(lat = mean(lat),
+                   long = mean(long),
+                   bio1.slope.40y = mean(bio1.slope.40y),
+                   bio1.current = mean(bio1.current))
+str(coord)
+coord.sf <- st_as_sf(coord, coords = c("long", "lat"), crs = 4326)
+data <- bi_class(coord.sf, x = bio1.slope.40y, y = bio1.current, style = "quantile", dim = 3)
+
+
+map <- ggplot() +
+  geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
+  geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
+  geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
+  geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
+  geom_sf(data = data, mapping = aes(fill = bi_class),  shape = 21, size = 1.75, color = "black", show.legend = FALSE) +
+  bi_scale_fill(pal = "Brown2", dim = 3) +
+  annotation_scale(location = "bl", width_hint = 0.1) +
+  annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
+  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
+  map_theme +
+  theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
+map
+#5 x 5
+
+legend <- bi_legend(pal = "Brown2",
+                    dim = 3,
+                    xlab = "bio1.slope.40y",
+                    ylab = "bio1.current",
+                    #rotate_pal = TRUE,
+                    #flip_axes = TRUE,
+                    size = 8)
+ggdraw() + draw_plot(legend, 0.2, .65, 0.2, 0.2)
+
+#"Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown"/"Brown2", "DkBlue"/"DkBlue2", "DkCyan"/"DkCyan2", "DkViolet"/"DkViolet2", "GrPink"/"GrPink2", "PinkGrn", "PurpleGrn", or "PurpleOr".
 
 ##-------------------------
 ## HISTOGRAM CSS PROPERTIES
