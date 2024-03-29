@@ -115,7 +115,6 @@ legend <- bi_legend(pal = "Brown2",
                     #flip_axes = TRUE,
                     size = 8)
 ggdraw() + draw_plot(legend, 0.2, .65, 0.2, 0.2)
-
 #"Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown"/"Brown2", "DkBlue"/"DkBlue2", "DkCyan"/"DkCyan2", "DkViolet"/"DkViolet2", "GrPink"/"GrPink2", "PinkGrn", "PurpleGrn", or "PurpleOr".
 
 ##-------------------------
