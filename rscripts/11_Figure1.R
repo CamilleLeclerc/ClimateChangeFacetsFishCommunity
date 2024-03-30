@@ -24,7 +24,6 @@ library(sf)
 library(stringr)
 library(tidyr)
 library(tidyverse)
-library(watina)
 
 
 ##FUNCTIONS##
@@ -87,7 +86,7 @@ coord <- dataset.thermal.trajectories %>%
                    bio1.current = mean(bio1.current))
 str(coord)
 coord.sf <- st_as_sf(coord, coords = c("long", "lat"), crs = 4326)
-data <- bi_class(coord.sf, x = bio1.slope.40y, y = bio1.current, style = "quantile", dim = 3)
+data <- bi_class(coord.sf, x = bio1.slope.40y, y = bio1.current, style = "quantile", dim = 4)
 
 
 map <- ggplot() +
@@ -96,7 +95,7 @@ map <- ggplot() +
   geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
   geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
   geom_sf(data = data, mapping = aes(fill = bi_class),  shape = 21, size = 1.75, color = "black", show.legend = FALSE) +
-  bi_scale_fill(pal = "Brown2", dim = 3) +
+  bi_scale_fill(pal = "Brown2", dim = 4) +
   annotation_scale(location = "bl", width_hint = 0.1) +
   annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
   coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
@@ -105,10 +104,10 @@ map <- ggplot() +
         strip.text.x = element_text(size = 12, color = "black", face = "bold"),
         panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
 map
-#5 x 5
+#4 x 4
 
 legend <- bi_legend(pal = "Brown2",
-                    dim = 3,
+                    dim = 4,
                     xlab = "bio1.slope.40y",
                     ylab = "bio1.current",
                     #rotate_pal = TRUE,
@@ -116,6 +115,7 @@ legend <- bi_legend(pal = "Brown2",
                     size = 8)
 ggdraw() + draw_plot(legend, 0.2, .65, 0.2, 0.2)
 #"Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown"/"Brown2", "DkBlue"/"DkBlue2", "DkCyan"/"DkCyan2", "DkViolet"/"DkViolet2", "GrPink"/"GrPink2", "PinkGrn", "PurpleGrn", or "PurpleOr".
+
 
 ##-------------------------
 ## HISTOGRAM CSS PROPERTIES
@@ -125,7 +125,7 @@ pslope <- dataset.thermal.trajectories %>%
   geom_histogram(aes(y = stat(density)), alpha = 0.4, color = "#edae49", fill = "#edae49") +
   geom_density(size = 1, color = "#edae49", adjust = 2) +
   geom_segment(x = mean(dataset.thermal.trajectories$ols.slope), xend = mean(dataset.thermal.trajectories$ols.slope), y = -Inf, yend = 0.5, linetype = "dashed", size = 1) +
-  labs(y = "Density", x = "Fish size spectrum slope") +
+  labs(y = "Density", x = "Slope of fish community size spectrum") +
   scale_x_continuous(breaks = c(-5, -4, -3, -2, -1, 0, 1, 2), limits = c(-5, 2)) +
   scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5), limits = c(0, 0.5)) +
   coord_capped_cart(bottom = 'both', left = 'both') +
@@ -144,13 +144,14 @@ pslope <- dataset.thermal.trajectories %>%
            size = 3)
 
 pslope
+#3 x 3
 
 pmidpoint <- dataset.thermal.trajectories %>%
   ggplot(aes(x = ols.elevation), position = "identity") +
   geom_histogram(aes(y = stat(density)), alpha = 0.4, color = "#edae49", fill = "#edae49") +
   geom_density(size = 1, color = "#edae49", adjust = 2) +
   geom_segment(x = mean(dataset.thermal.trajectories$ols.elevation), xend = mean(dataset.thermal.trajectories$ols.elevation), y = -Inf, yend = 0.5, linetype = "dashed", size = 1) +
-  labs(y = "Density", x = "Fish size spectrum mid-point") +
+  labs(y = "Density", x = "Elevation of fish community size spectrum") +
   scale_x_continuous(breaks = c(-2, -1, 0, 1, 2, 3, 4, 5, 6, 7), limits = c(-2, 7)) +
   scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5), limits = c(0, 0.5)) +
   coord_capped_cart(bottom = 'both', left = 'both') +
@@ -168,6 +169,7 @@ pmidpoint <- dataset.thermal.trajectories %>%
            hjust = 1, vjust = 1, 
            size = 3)
 pmidpoint
+#3 x 3
 
 
 ##------------------------
@@ -198,6 +200,7 @@ pconnect <- dataset.thermal.trajectories %>%
            hjust = 1, vjust = 1, 
            size = 3)
 pconnect
+#3 x 3
 
 
 #MAXIMUM TROPHIC LEVEL
@@ -205,10 +208,10 @@ pmaxtl <- dataset.thermal.trajectories %>%
   ggplot(aes(x = maxtl), position = "identity") +
   geom_histogram(aes(y = stat(density)), alpha = 0.4, color = "#2e4057", fill = "#2e4057", bins = 20) +
   geom_density(size = 1, color = "#2e4057", adjust = 3) +
-  geom_segment(x = mean(dataset.thermal.trajectories$maxtl), xend = mean(dataset.thermal.trajectories$maxtl), y = -Inf, yend = 3, linetype = "dashed", size = 1) +
+  geom_segment(x = mean(dataset.thermal.trajectories$maxtl), xend = mean(dataset.thermal.trajectories$maxtl), y = -Inf, yend = 4, linetype = "dashed", size = 1) +
   labs(y = "Density", x = "Maximum trophic level") +
   scale_x_continuous(breaks = c(3.5, 4, 4.5, 5), limits = c(3.5, 5)) +
-  #scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6), limits = c(0, 6)) +
+  scale_y_continuous(breaks = c(0, 1, 2, 3, 4), limits = c(0, 4)) +
   coord_capped_cart(bottom = 'both', left = 'both') +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
@@ -224,6 +227,7 @@ pmaxtl <- dataset.thermal.trajectories %>%
            hjust = 1, vjust = 1, 
            size = 3)
 pmaxtl
+#3 x 3
 
 
 ##----------------------------------------------------
@@ -254,15 +258,15 @@ psizespecies <- ind_size %>%
   geom_density(size = 1, adjust = 4) +
   scale_color_manual(values = c("#969696", "#66a182")) +
   scale_fill_manual(values = c("#969696", "#66a182")) +
-  scale_x_break(c(40, 80)) +
+  #scale_x_break(c(40, 80)) +
   geom_vline(xintercept = mean(NIS$fish/10), linetype = "dashed", size = 1, color = "#66a182") +
   geom_vline(xintercept = mean(NS$fish/10), linetype = "dashed", size = 1, color = "#969696") +
   #geom_segment(x = mean(NIS$fish/10), xend = mean(NIS$fish/10), y = -Inf, yend = 0.15, linetype = "dashed", size = 1, color = "#66a182") +
   #geom_segment(x = mean(NS$fish/10), xend = mean(NS$fish/10), y = -Inf, yend = 0.15, linetype = "dashed", size = 1, color = "#969696") +
   labs(y = "Density", x = "Fish body size (cm)") +
   guides(x = "axis_truncated", x.sec = guide_none()) +
-  #scale_x_continuous(breaks = c(3.5, 4, 4.5, 5), limits = c(3.5, 5)) +
-  #scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15, 0.2, 0.25), limits = c(0, 0.25)) +
+  scale_x_continuous(limits = c(0, 40)) +
+  scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15, 0.2, 0.25), limits = c(0, 0.25)) +
   guides(y = "axis_truncated", y.sec = guide_none()) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
