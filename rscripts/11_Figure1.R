@@ -94,7 +94,7 @@ map <- ggplot() +
   geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
   geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
   geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
-  geom_sf(data = data, mapping = aes(fill = bi_class),  shape = 21, size = 1.75, color = "black", show.legend = FALSE) +
+  geom_sf(data = data, mapping = aes(fill = bi_class),  shape = 21, size = 2, color = "black", show.legend = FALSE) +
   bi_scale_fill(pal = "Brown2", dim = 4) +
   annotation_scale(location = "bl", width_hint = 0.1) +
   annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
@@ -104,7 +104,7 @@ map <- ggplot() +
         strip.text.x = element_text(size = 12, color = "black", face = "bold"),
         panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
 map
-#4 x 4
+#4.5 x 4.5
 
 legend <- bi_legend(pal = "Brown2",
                     dim = 4,
@@ -265,7 +265,7 @@ psizespecies <- ind_size %>%
   #geom_segment(x = mean(NS$fish/10), xend = mean(NS$fish/10), y = -Inf, yend = 0.15, linetype = "dashed", size = 1, color = "#969696") +
   labs(y = "Density", x = "Fish body size (cm)") +
   guides(x = "axis_truncated", x.sec = guide_none()) +
-  scale_x_continuous(limits = c(0, 40)) +
+  scale_x_continuous(limits = c(0, 95)) +
   scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15, 0.2, 0.25), limits = c(0, 0.25)) +
   guides(y = "axis_truncated", y.sec = guide_none()) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
