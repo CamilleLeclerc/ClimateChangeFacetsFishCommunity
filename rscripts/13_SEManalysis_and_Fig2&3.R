@@ -436,7 +436,7 @@ pCAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Current climat
   theme(legend.position = "none",
         axis.text = element_text(size = 14, colour = "#000000"),
         axis.title = element_text(size = 16, face = "bold", colour = "#000000")) 
-pCAMT
+pCAMT #4x6
 
 
 pTAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Climate warming"),
