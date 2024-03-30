@@ -254,18 +254,18 @@ data.effect[data.effect == "connect"] <- "Connectance"
 data.effect[data.effect == "maxtl"] <- "Maximum trophic level"
 data.effect[data.effect == "ols.slope"] <- "Slope"
 data.effect[data.effect == "ols.elevation"] <- "Elevation"
-data.effect[data.effect == "fish.richness"] <- "Total species richness"
-data.effect[data.effect == "nis.richness"] <- "Non-indigenous species richness"
-data.effect[data.effect == "bio1.current"] <- "Current climatic conditions"
+data.effect[data.effect == "fish.richness"] <- "Total sp. richness"
+data.effect[data.effect == "nis.richness"] <- "Exotic sp. richness"
+data.effect[data.effect == "bio1.current"] <- "Climatic conditions"
 data.effect[data.effect == "bio1.slope.40y"] <- "Climate warming"
 
 data.effect[data.effect == "connect       "] <- "Connectance"
 data.effect[data.effect == "maxtl"] <- "Maximum trophic level"
 data.effect[data.effect == "ols.slope     "] <- "Slope"
 data.effect[data.effect == "ols.elevation "] <- "Elevation"
-data.effect[data.effect == "fish.richness "] <- "Total species richness"
-data.effect[data.effect == "nis.richness  "] <- "Non-indigenous species richness"
-data.effect[data.effect == "bio1.current  "] <- "Current climatic conditions"
+data.effect[data.effect == "fish.richness "] <- "Total sp. richness"
+data.effect[data.effect == "nis.richness  "] <- "Exotic sp. richness"
+data.effect[data.effect == "bio1.current  "] <- "Climatic conditions"
 
 data.effect[data.effect == "DIRECT"] <- "Direct"
 data.effect[data.effect == "INDIRECT"] <- "Indirect"
@@ -275,7 +275,7 @@ data.effect[data.effect == "INDIRECT "] <- "Indirect"
 data.effect[data.effect == "TOTAL    "] <- "Total"
 
 str(data.effect)
-data.effect$Response <- factor(data.effect$Response, levels = c('Maximum trophic level', 'Connectance', 'Elevation', 'Slope', 'Total species richness', 'Non-indigenous species richness', 'Current climatic conditions'), ordered = TRUE) 
+data.effect$Response <- factor(data.effect$Response, levels = c('Maximum trophic level', 'Connectance', 'Elevation', 'Slope', 'Total sp. richness', 'Exotic sp. richness', 'Climatic conditions'), ordered = TRUE) 
 
 all.combination <- data.effect %>% dplyr::select(Predictor, Response) %>% unique(.)
 indirect.effect <- data.effect %>% dplyr::filter(Type == "Indirect")
@@ -295,7 +295,7 @@ data.effect <- data.effect %>% mutate(position = if_else(Effect > 0, UpperCI + 0
 
 
 #figure about all effects (total, indirect, direct)
-pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
+pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climatic conditions"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
@@ -329,7 +329,7 @@ pTAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climate warming"),
 pTAMT
 
 
-pNISR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Non-indigenous species richness"),
+pNISR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Exotic sp. richness"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
@@ -346,7 +346,7 @@ pNISR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Non-indigenous speci
 pNISR
 
 
-pTSR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Total species richness"),
+pTSR <- ggplot(data.effect %>% dplyr::filter(Predictor == "Total sp. richness"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
@@ -422,7 +422,7 @@ plot_grid(pCAMT, pTAMT,
 data.total.effect <- data.effect %>% dplyr::filter(Type == "Total")
 
 
-pCAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
+pCAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Climatic conditions"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
@@ -456,7 +456,7 @@ pTAMT <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Climate warmin
 pTAMT
 
 
-pNISR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Non-indigenous species richness"),
+pNISR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Exotic sp. richness"),
                 aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
@@ -473,7 +473,7 @@ pNISR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Non-indigenous
 pNISR
 
 
-pTSR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Total species richness"),
+pTSR <- ggplot(data.total.effect %>% dplyr::filter(Predictor == "Total sp. richness"),
                aes(x = Effect, y = Response)) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   geom_bar(stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
@@ -543,7 +543,7 @@ plot_grid(pCAMT, pTAMT,
 data.direct.indirect.effect <- data.effect %>% dplyr::filter(!Type == "Total")
 
 
-pCAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Current climatic conditions"),
+pCAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Climatic conditions"),
                 aes(x = Effect, y = Response, pattern = factor(Type))) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   #geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#8d96a3") +
@@ -595,7 +595,7 @@ pTAMT <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Clim
 pTAMT
 
 
-pNISR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Non-indigenous species richness"),
+pNISR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Exotic sp. richness"),
                 aes(x = Effect, y = Response, pattern = factor(Type))) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   #geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
@@ -621,7 +621,7 @@ pNISR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Non-
 pNISR
 
 
-pTSR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Total species richness"),
+pTSR <- ggplot(data.direct.indirect.effect %>% dplyr::filter(Predictor == "Total sp. richness"),
                aes(x = Effect, y = Response, pattern = factor(Type))) +
   geom_vline(xintercept = 0, linetype = 'dashed', color = 'black', size = 1) +
   #geom_bar(aes(alpha = factor(Type)), stat = "identity", position = "dodge", width = 0.75, colour = "black", fill = "#66a182") +
