@@ -5,14 +5,7 @@ rm(list = ls()) #Removes all objects from the current workspace (R memory)
 ##LOADING PACKAGES AND FUNCTIONS
 ##------------------------------
 ##PACKAGES##
-library(cowplot)
-library(dplyr)
-library(ggh4x)
-library(ggpattern)
-library(ggplot2)
-library(ggpubr)
 library(kableExtra)
-library(lemon)
 library(lme4)
 library(piecewiseSEM)
 library(purrr)
@@ -23,7 +16,7 @@ library(tidyr)
 
 ##FUNCTIONS##
 source("./rfunctions/misc.R")
-source("./rfunctions/modifications_piecewiseSEM.R")
+source("./rfunctions/vif_func.R")
 
 
 ##--------------
@@ -40,99 +33,69 @@ summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
 dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
 
 
-##-----------------------------------------------------------------------------------------------------------------------------------------------
-## CATEGORIZE LAKES (e.g. COLD, MODERATE, WARM) TO SEE IF WE OBSERVE THE SAME EFFECTS OF WARMING IN LAKES THAT ARE ALREADY WARM VERSUS COLD LAKES
-##-----------------------------------------------------------------------------------------------------------------------------------------------
-quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = c(0.25, 0.75))
-quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = c(0.3, 0.6))
-quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = c(0.33333, 0.6666))
-
-dataset.thermal.trajectories$type.quant.33.66 <- NA
-dataset.thermal.trajectories$type.quant.33.66[dataset.thermal.trajectories$bio1.current <= 13.05480] <- "cold"
-dataset.thermal.trajectories$type.quant.33.66[dataset.thermal.trajectories$bio1.current >= 14.57316] <- "warm"
-dataset.thermal.trajectories$type.quant.33.66[is.na(dataset.thermal.trajectories$type.quant.33.66)] <- "moderate"
-summary(as.factor(dataset.thermal.trajectories$type.quant.33.66))
-
-
-dataset.thermal.trajectories %>%
-  ggplot(aes(x = bio1.current), position = "identity") +
-  geom_histogram(aes(y = stat(density)), alpha = 0.4, color = "#8d96a3", fill = "#8d96a3") +
-  geom_density(size = 1, color = "#8d96a3", adjust = 2) +
-  geom_segment(x = quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = 0.33333), xend = quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = 0.33333), y = -Inf, yend = 0.3, linetype = "dashed", size = 1) +
-  geom_segment(x = quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = 0.66666), xend = quantile(dataset.thermal.trajectories$bio1.current, na.rm = T, probs = 0.66666), y = -Inf, yend = 0.3, linetype = "dashed", size = 1) +
-    labs(y = "Density", x = "Climatic condition (°C)") +
-  scale_x_continuous(breaks = c(5, 10, 15, 20), limits = c(5, 20)) +
-  scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3), limits = c(0, 0.3)) +
-  guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
-  theme_classic() + 
-  theme(legend.position = "none",
-        axis.text = element_text(size = 12, colour = "#000000"),
-        axis.title = element_text(size = 14, face = "bold", colour = "#000000"))
-
-
-##---------------
-## MULTIGROUP SEM
-##---------------
-#https://github.com/jslefche/piecewiseSEM/issues/284
-
-data <- dataset.thermal.trajectories %>% dplyr::select(lake.code, type.quant.33.66, fish.richness, nis.richness, ols.slope, ols.elevation, connect, maxtl, bio1.slope.40y, bio1.current)         
+##---------
+##CHECK VIF
+##---------
+data <- dataset.thermal.trajectories %>% dplyr::select(lake.code, year.samp, fish.richness, nis.richness, ols.slope, ols.elevation, connect, maxtl, bio1.slope.40y, bio1.current)         
+summary(data)
 str(data)
-data$type.quant.33.66 <- as.factor(data$type.quant.33.66)
-
-thermtraj_lme <- psem(
-  lme(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(nis.richness ~ bio1.slope.40y + bio1.current, random = ~ 1 |lake.code, data),
-  lme(bio1.current ~ bio1.slope.40y, random = ~ 1 |lake.code, data),
-  data = data)
+data$lake.code <- as.factor(data$lake.code)
+keep.dat <- vif_func(in_frame = data %>% dplyr::select(fish.richness, nis.richness, ols.slope, ols.elevation, connect, maxtl, bio1.slope.40y, bio1.current), thresh = 3, trace = T)
 
 
-thermtraj_lme.multigroup <- multigroup2(thermtraj_lme, group = "type.quant.33.66")
-thermtraj_lme.multigroup 
+##-----------------------------
+## STRUCTURAL EQUATION MODELING
+##-----------------------------
 
-
-##SEM WITH "COLD" LAKES - DIRECT, INDIRECT AND TOTAL EFFECTS
-data.cold <- data %>% dplyr::filter(type.quant.33.66 == "cold")
-
-thermtraj_cold <- list(
-  connect = lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  maxtl = lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  ols.slope = lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  ols.elevation = lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  fish.richness = lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  nis.richness = lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  bio1.current = lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data.cold)
+# Break down component regressions with random AND autocorrelation structures
+thermtraj_lme <- list(
+  connect = lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  maxtl = lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  ols.slope = lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  ols.elevation = lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  fish.richness = lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  nis.richness = lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  bio1.current = lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data)
 )
 
 
 # Use the `psem` function to create the SEM
-thermtraj_cold_model <- as.psem(thermtraj_cold)
-summary(thermtraj_cold_model)
+thermtraj_model <- as.psem(thermtraj_lme)
+summary(thermtraj_model)
 
 # Can use `dsep` function to perform the tests automatically
-dSep(thermtraj_cold_model)
+dSep(thermtraj_model)
 
 # Can use `fisherC` function to evaluate claims
-fisherC(thermtraj_cold_model) # low p-value implies that the hypothesized structure is statistically different than the structure implied by our data
-#=> a low p-value is actually bad as the model doesn't match the associations that are implied by the data
+fisherC(thermtraj_model) # low p-value implies that the hypothesized structure is statistically different than the structure implied by our data
+                  #=> a low p-value is actually bad as the model doesn't match the associations that are implied by the data
 
 # Get coefficients from good-fitting SEM
-coefs(thermtraj_cold_model)
+coefs(thermtraj_model) #Std.Estimate takes the raw estimate and scale it by the ratio of standard deviation between predictor and response variables
+                #unitless
+                #Standardized estimates are in units of standard deviations of the mean
+                # Can be directly compared even though initial units are very different
+
+# Plot SEM with standardized coefficients
+plot(thermtraj_model)
+piecewiseSEM:::plot.psem(
+  piecewiseSEM::as.psem(thermtraj_model),
+  node_attrs = data.frame(shape = "rectangle", color = "black", fillcolor = "grey"),
+  layout = "tree"
+)
+
 
 #Direct and indirect effect
 #https://murphymv.github.io/semEff/articles/semEff.html
-thermtraj.cold.sem <- list(
-  lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data.cold),
-  lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data.cold),
-  lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data.cold)
+
+thermtraj.sem <- list(
+  lmer(connect ~ fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  lmer(maxtl ~ connect + fish.richness + nis.richness + ols.slope + ols.elevation + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  lmer(ols.slope ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  lmer(ols.elevation ~ fish.richness + nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  lmer(fish.richness ~ nis.richness + bio1.slope.40y + bio1.current + (1|lake.code), data = data),
+  lmer(nis.richness ~ bio1.slope.40y + bio1.current + (1 | lake.code), data = data),
+  lmer(bio1.current ~ bio1.slope.40y + (1|lake.code), data = data)
 )
 
 
@@ -322,3 +285,5 @@ data.effect$significant <- NA
 data.effect$significant[data.effect$SymbSign == "*"] <- TRUE
 data.effect$significant[data.effect$SymbSign == ""] <- FALSE
 data.effect <- data.effect %>% mutate(position = if_else(Effect > 0, UpperCI + 0.02, LowerCI - 0.02))
+#sem_effect_all_lakes <- data.effect
+#mysave(sem_effect_all_lakes, dir = "outputs/SEM", overwrite = TRUE)
