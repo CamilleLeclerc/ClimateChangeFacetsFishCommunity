@@ -292,7 +292,8 @@ data.effect$significant <- NA
 data.effect$significant[data.effect$SymbSign == "*"] <- TRUE
 data.effect$significant[data.effect$SymbSign == ""] <- FALSE
 data.effect <- data.effect %>% mutate(position = if_else(Effect > 0, UpperCI + 0.02, LowerCI - 0.02))
-
+#sem_effect_all_lakes <- data.effect
+#mysave(sem_effect_all_lakes, dir = "outputs/SEM", overwrite = TRUE)
 
 #figure about all effects (total, indirect, direct)
 pCAMT <- ggplot(data.effect %>% dplyr::filter(Predictor == "Climatic conditions"),
