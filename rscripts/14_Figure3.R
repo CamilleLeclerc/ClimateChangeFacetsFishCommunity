@@ -18,7 +18,6 @@ library(tidyr)
 
 ##FUNCTIONS##
 source("./rfunctions/misc.R")
-source("./rfunctions/vif_func.R")
 
 
 ##--------------
