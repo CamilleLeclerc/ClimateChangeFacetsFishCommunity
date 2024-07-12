@@ -69,7 +69,7 @@ pClimWarm <- ggplot(data.effect %>% filter(Predictor == "Climate warming" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 6.5, xmax = 7.5, fill = "grey", alpha = 0.25)
-pClimWarm
+#pClimWarm
 #5 x 10
 
 
@@ -101,7 +101,7 @@ pClimCond <- ggplot(data.effect %>% filter(Predictor == "Climatic conditions" & 
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "grey", alpha = 0.25)
-pClimCond
+#pClimCond
 #5 x 10
 
 
@@ -131,7 +131,7 @@ pTotSR <- ggplot(data.effect %>% filter(Predictor == "Total sp. richness" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pTotSR
+#pTotSR
 #5 x 10
 
 
@@ -163,7 +163,7 @@ pExoSR <- ggplot(data.effect %>% filter(Predictor == "Exotic sp. richness" & Typ
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25)
-pExoSR
+#pExoSR
 #5 x 10
 
 
@@ -191,7 +191,7 @@ pElev <- ggplot(data.effect %>% filter(Predictor == "Elevation" & Type == "Total
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pElev 
+#pElev 
 #5 x 10
 
 
@@ -219,7 +219,7 @@ pSlope <- ggplot(data.effect %>% filter(Predictor == "Slope" & Type == "Total"))
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pSlope 
+#pSlope 
 #5 x 10
 
 plot_grid(pClimCond, pClimWarm, 
@@ -269,7 +269,7 @@ pClimWarm <- ggplot(data.effect %>% filter(Predictor == "Climate warming" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 6.5, xmax = 7.5, fill = "grey", alpha = 0.25)
-pClimWarm
+#pClimWarm
 #5 x 10
 
 
@@ -301,7 +301,7 @@ pClimCond <- ggplot(data.effect %>% filter(Predictor == "Climatic conditions" & 
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "grey", alpha = 0.25)
-pClimCond
+#pClimCond
 #5 x 10
 
 
@@ -331,7 +331,7 @@ pTotSR <- ggplot(data.effect %>% filter(Predictor == "Total sp. richness" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pTotSR
+#pTotSR
 #5 x 10
 
 
@@ -363,7 +363,7 @@ pExoSR <- ggplot(data.effect %>% filter(Predictor == "Exotic sp. richness" & Typ
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25)
-pExoSR
+#pExoSR
 #5 x 10
 
 
@@ -391,7 +391,7 @@ pElev <- ggplot(data.effect %>% filter(Predictor == "Elevation" & Type == "Direc
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pElev 
+#pElev 
 #5 x 10
 
 
@@ -419,7 +419,7 @@ pSlope <- ggplot(data.effect %>% filter(Predictor == "Slope" & Type == "Direct")
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pSlope 
+#pSlope 
 #5 x 10
 
 plot_grid(pClimCond, pClimWarm, 
@@ -469,7 +469,7 @@ pClimWarm <- ggplot(data.effect %>% filter(Predictor == "Climate warming" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 6.5, xmax = 7.5, fill = "grey", alpha = 0.25)
-pClimWarm
+#pClimWarm
 #5 x 10
 
 
@@ -501,7 +501,7 @@ pClimCond <- ggplot(data.effect %>% filter(Predictor == "Climatic conditions" & 
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 5.5, xmax = 6.5, fill = "grey", alpha = 0.25)
-pClimCond
+#pClimCond
 #5 x 10
 
 
@@ -531,7 +531,7 @@ pTotSR <- ggplot(data.effect %>% filter(Predictor == "Total sp. richness" & Type
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pTotSR
+#pTotSR
 #5 x 10
 
 
@@ -563,7 +563,7 @@ pExoSR <- ggplot(data.effect %>% filter(Predictor == "Exotic sp. richness" & Typ
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 2.5, xmax = 3.5, fill = "grey", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 3.5, xmax = 4.5, fill = "white", alpha = 0.25) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 4.5, xmax = 5.5, fill = "grey", alpha = 0.25)
-pExoSR
+#pExoSR
 #5 x 10
 
 
@@ -591,7 +591,7 @@ pElev <- ggplot(data.effect %>% filter(Predictor == "Elevation" & Type == "Indir
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pElev 
+#pElev 
 #5 x 10
 
 
@@ -619,7 +619,7 @@ pSlope <- ggplot(data.effect %>% filter(Predictor == "Slope" & Type == "Indirect
     panel.spacing = unit(2, "lines"),
     panel.border = element_rect(colour = "black", fill = NA)) +
   annotate("rect", ymin = -Inf, ymax = Inf, xmin = 1.5, xmax = 2.5, fill = "grey", alpha = 0.25)
-pSlope 
+#pSlope 
 #5 x 10
 
 plot_grid(pClimCond, pClimWarm, 

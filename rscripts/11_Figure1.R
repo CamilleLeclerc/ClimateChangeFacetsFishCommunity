@@ -24,6 +24,9 @@ library(sf)
 library(stringr)
 library(tidyr)
 library(tidyverse)
+library(viridis)
+library(jcolors)
+library(colorspace)
 
 
 ##FUNCTIONS##
@@ -115,6 +118,35 @@ legend <- bi_legend(pal = "Brown2",
                     size = 8)
 ggdraw() + draw_plot(legend, 0.2, .65, 0.2, 0.2)
 #"Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown"/"Brown2", "DkBlue"/"DkBlue2", "DkCyan"/"DkCyan2", "DkViolet"/"DkViolet2", "GrPink"/"GrPink2", "PinkGrn", "PurpleGrn", or "PurpleOr".
+
+
+data$bio1.slope.40y <- data$bio1.slope.40y * 10 #in°C/dec
+data$class.bio1.slope.40y <- NA
+data$class.bio1.slope.40y[data$bio1.slope.40y < 0] <- "A"
+data$class.bio1.slope.40y[data$bio1.slope.40y >= 0 & data$bio1.slope.40y < 0.25] <- "B"
+data$class.bio1.slope.40y[data$bio1.slope.40y >= 0.25 & data$bio1.slope.40y < 0.50] <- "C"
+data$class.bio1.slope.40y[data$bio1.slope.40y >= 0.50] <- "D"
+
+
+
+map <- ggplot() +
+  geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
+  geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
+  geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
+  geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
+  geom_sf(data = data, mapping = aes(fill = bio1.current, shape = class.bio1.slope.40y), size = 2, color = "black", show.legend = FALSE) +
+  scale_shape_manual(values = c(25, 21, 22, 23)) +
+  scale_fill_continuous_sequential(palette = "Heat") +
+  annotation_scale(location = "bl", width_hint = 0.1) +
+  annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
+  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
+  map_theme +
+  theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
+map
+
+
 
 
 ##-------------------------
