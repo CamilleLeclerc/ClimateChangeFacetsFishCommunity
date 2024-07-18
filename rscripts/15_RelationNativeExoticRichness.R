@@ -53,7 +53,7 @@ dataset.thermal.trajectories %>%
   scale_y_continuous(breaks = c(0, 5, 10, 15), limits = c(0, 15)) +
   scale_x_continuous(breaks = c(0, 2, 4, 6), limits = c(0, 6)) +
   guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
-  labs(y = "Number of native fish", x = "Number of exotic fish") +
+  labs(y = "Number of native fish species", x = "Number of exotic fish species") +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
   theme_classic() + 
   theme(legend.position = "none",
