@@ -13,9 +13,13 @@ data/fish_data.csv
 data/lake_temperature/
 outputs/IndividualSize/lake_individual_size.txt
 data/plan_deau_lacs_caracteristiques.csv
+outputs/Temperature/datasettrend_258L.rda
 
 # scripts and associated files
 rscripts/01_Number_of_gillnets_laying_by_lake_and_year.R
 outputs/lake_number_gillnets_benthic.txt
 outputs/lake_number_gillnets_pelagic.txt
 rscripts/15_SEManalysisSIClimateWarming.R
+rscripts/essai.R
+rscripts/15_SEManalysisSITypeLakes_part1.R
+rscripts/15_SEManalysisSITypeLakes_part2.R
