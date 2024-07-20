@@ -25,12 +25,17 @@ source("./rfunctions/theme_map.R")
 ##--------------
 ## LOAD DATASETS
 ##--------------
+myload(dataset_9BSCBenthicPelagicGillnetSelectivity, dir = "outputs")
 myload(ind_size, dir = "./outputs/IndividualSize")
 
 
 ##----------------
 ## PREPARE DATASET
 ##----------------
+dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
+length(unique(ind_size$code_lac)) ; length(unique(dataset.thermal.trajectories$lake.code))
+ind_size <- ind_size %>% dplyr::filter(id_campagne %in% dataset.thermal.trajectories$id.samp)
+nrow(ind_size %>% dplyr::select(code_lac, camp_annee) %>% unique(.)) ; nrow(dataset.thermal.trajectories %>% dplyr::select(lake.code, year.samp) %>% unique(.))
 ind_size$species <- sub("_", " ", ind_size$species)
 ind_size$species[ind_size$species == "Salmo trutta_fario"] <- "Salmo trutta"
 ind_size$species[ind_size$species == "Salmo trutta_lacustris"] <- "Salmo trutta"
