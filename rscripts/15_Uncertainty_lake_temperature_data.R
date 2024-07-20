@@ -130,3 +130,11 @@ rm(i, j, period)
 
 uncertainty_temperature_5y_period <- uncertainty
 mysave(uncertainty_temperature_5y_period, dir = "./outputs/Temperature", overwrite = TRUE)
+
+
+##-----------------------------------------------------------------------##
+#myload(uncertainty_temperature_5y_period, dir = "./outputs/Temperature")
+#myload(uncertainty_temperature_40y_period, dir = "./outputs/Temperature")
+
+#summary(uncertainty_temperature_5y_period)
+#summary(uncertainty_temperature_40y_period)
