@@ -42,9 +42,9 @@ dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
 dataset.thermal.trajectories$native.richness <- dataset.thermal.trajectories$fish.richness - dataset.thermal.trajectories$nis.richness
 summary(dataset.thermal.trajectories)
 
-##----------------
+##------------
 ## CORRELATION
-##----------------
+##------------
 dataset.thermal.trajectories %>%
   ggplot(aes(y = native.richness, x = nis.richness)) +
   geom_point(size = 3, shape = 21, color = "black", fill = "#bdbdbd") + guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +

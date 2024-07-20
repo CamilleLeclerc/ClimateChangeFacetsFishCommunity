@@ -4,7 +4,8 @@ rm(list = ls()) #Removes all objects from the current workspace (R memory)
 ##------------------------------
 ##LOADING PACKAGES AND FUNCTIONS
 ##------------------------------
-##PACKAGES##
+##PACKAGES
+library(cowplot)
 library(dplyr)
 library(forcats)
 library(ggplot2)
@@ -77,6 +78,8 @@ df <- left_join(df, species_occurrence, by = 'species')
 df <- df %>% drop_na()
 head(df)
 
+
+## PLOT NATIVE SPECIES
 # Filter data for native species only
 df.native <- df %>% filter(type == "native")
 
@@ -84,7 +87,7 @@ df.native <- df %>% filter(type == "native")
 df.native <- df.native %>% mutate(species = fct_rev(factor(species)))
 
 # Create the plot for native species only
-ggplot(df.native, aes(y = species, x = percentage, fill = size_category)) +
+native <- ggplot(df.native, aes(y = species, x = percentage, fill = size_category)) +
   # Add bars for the percentages
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
   # Add rectangles to represent 100% height
@@ -103,7 +106,46 @@ ggplot(df.native, aes(y = species, x = percentage, fill = size_category)) +
         axis.text.x = element_text(size = 14, colour = "#000000"),
         axis.title = element_text(size = 16, face = "bold", colour = "#000000"),
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+native 
 
 
+## PLOT EXOTIC SPECIES
+# Filter data for exotic species only
+df.exotic <- df %>% filter(type == "non-indigenous")
 
+# Reverse the order of species
+df.exotic <- df.exotic %>% mutate(species = fct_rev(factor(species)))
+
+# Create the plot for exotic species only
+exotic <- ggplot(df.exotic, aes(y = species, x = percentage, fill = size_category)) +
+  # Add bars for the percentages
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  # Add rectangles to represent 100% height
+  geom_rect(data = df.exotic %>% distinct(species, type),
+            aes(ymin = as.numeric(factor(species)) - 0.35, 
+                ymax = as.numeric(factor(species)) + 0.35,
+                xmin = 0, xmax = 100),
+            inherit.aes = FALSE,
+            color = "black", fill = NA, size = 0.5) +
+  # Customize colors for size categories
+  scale_fill_manual(values = c("< 10 cm" = "#ececec", "10-15 cm" = "#717575", "15-20 cm" = "#ffc180", "20-25 cm" = "#ea7600", "> 25 cm" = "#b35c00")) +
+  # Customize labels and theme
+  labs(y = NULL, x = "Percentage", fill = "Mean size") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 14, colour = "#000000", face = "italic"),
+        axis.text.x = element_text(size = 14, colour = "#000000"),
+        axis.title = element_text(size = 16, face = "bold", colour = "#000000"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+exotic 
+
+plot_grid(native, exotic,
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1)
+
+
+library(grid)
+empty_panel <- grid.rect(gp=gpar(col="white"))
