@@ -63,12 +63,12 @@ species_mean_size <- ind_size %>%
   summarise(mean_size = mean(fish)/10)
 quantile(species_mean_size$mean_size, na.rm = T, probs = c(0.33333, 0.6666))
 species_mean_size$size_category <- NA
-species_mean_size$size_category[species_mean_size$mean_size <= 10] <- "< 10 cm"
+species_mean_size$size_category[species_mean_size$mean_size <= 12.5] <- "< 12.5 cm"
 species_mean_size$size_category[species_mean_size$mean_size >= 25] <- "> 25 cm"
-species_mean_size$size_category[species_mean_size$mean_size > 10 & species_mean_size$mean_size <= 15] <- "10-15 cm"
-species_mean_size$size_category[species_mean_size$mean_size > 15 & species_mean_size$mean_size <= 20] <- "15-20 cm"
-species_mean_size$size_category[species_mean_size$mean_size > 20 & species_mean_size$mean_size <= 25] <- "20-25 cm"
-#species_mean_size$size_category[is.na(species_mean_size$size_category)] <- "10-25 cm"
+#species_mean_size$size_category[species_mean_size$mean_size > 10 & species_mean_size$mean_size <= 15] <- "10-15 cm"
+#species_mean_size$size_category[species_mean_size$mean_size > 15 & species_mean_size$mean_size <= 20] <- "15-20 cm"
+#species_mean_size$size_category[species_mean_size$mean_size > 20 & species_mean_size$mean_size <= 25] <- "20-25 cm"
+species_mean_size$size_category[is.na(species_mean_size$size_category)] <- "12.5-25 cm"
 
 
 ##OCCURENCE OF SPECIES
@@ -144,7 +144,7 @@ native <- ggplot(df.native , aes(y = species, x = percentage, fill = size_catego
             inherit.aes = FALSE,
             color = "black", fill = NA, size = 0.5) +
   # Customize colors for size categories
-  scale_fill_manual(values = c("< 10 cm" = "#ececec", "10-15 cm" = "#717575", "15-20 cm" = "#ffc180", "20-25 cm" = "#ea7600", "> 25 cm" = "#b35c00")) +
+  scale_fill_manual(values = c("> 25 cm" = "#979a9b", "12.5-25 cm" = "#c1a59d", "< 12.5 cm" = "#f7c8a4")) +
   # Customize labels and theme
   labs(y = NULL, x = "Percentage", fill = "Mean size") +
   theme_minimal() +
@@ -176,7 +176,7 @@ exotic <- ggplot(df.exotic , aes(y = species, x = percentage, fill = size_catego
             inherit.aes = FALSE,
             color = "black", fill = NA, size = 0.5) +
   # Customize colors for size categories
-  scale_fill_manual(values = c("< 10 cm" = "#ececec", "10-15 cm" = "#717575", "15-20 cm" = "#ffc180", "20-25 cm" = "#ea7600", "> 25 cm" = "#b35c00")) +
+  scale_fill_manual(values = c("> 25 cm" = "#979a9b", "12.5-25 cm" = "#c1a59d", "< 12.5 cm" = "#f7c8a4")) +
   # Customize labels and theme
   labs(y = NULL, x = "Percentage", fill = "Mean size") +
   theme_minimal() +
