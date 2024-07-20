@@ -146,6 +146,3 @@ plot_grid(native, exotic,
           labels = c("A", "B"),
           ncol = 2, nrow = 1)
 
-
-library(grid)
-empty_panel <- grid.rect(gp=gpar(col="white"))
