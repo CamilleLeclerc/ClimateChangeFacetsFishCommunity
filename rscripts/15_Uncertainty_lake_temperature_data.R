@@ -50,7 +50,8 @@ uncertainty_temp_okp$month <- month(uncertainty_temp_okp$time)
 uncertainty_temp_okp$day <- day(uncertainty_temp_okp$time)
 head(uncertainty_temp_okp)
 uncertainty_temp_okp <- uncertainty_temp_okp %>% dplyr::select(Lake_ID, time, year, month, day, p05, p95)
-
+uncertainty_temp_okp$diff.p95.05 <- uncertainty_temp_okp$p95 - uncertainty_temp_okp$p05
+  
 rm(list_of_files)
 
 
@@ -64,7 +65,7 @@ date_fish_sampling <- date_fish_sampling %>% dplyr::filter(code_lac != "PRA66")
 ##-----------------------------------------
 ##COMPUTE MONTHLY MEAN TEMPERATURE PER YEAR
 ##-----------------------------------------
-monthly_uncertainty_temp_okp <- as.data.frame(matrix(nrow = 0, ncol = 6, dimnames = list(NULL, c("Lake_ID", "time", "year", "month", "p05", "p95"))))
+monthly_uncertainty_temp_okp <- as.data.frame(matrix(nrow = 0, ncol = 6, dimnames = list(NULL, c("Lake_ID", "time", "year", "month", "mean.diff.p95.05", "median.diff.p95.05"))))
 
 for(i in 1:length(unique(uncertainty_temp_okp$Lake_ID))) {
   df1 <- uncertainty_temp_okp %>% filter(Lake_ID == unique(uncertainty_temp_okp$Lake_ID)[i])
@@ -75,7 +76,7 @@ for(i in 1:length(unique(uncertainty_temp_okp$Lake_ID))) {
     for(k in 1:length(unique(df2$month))) { 
       
       lake <- df2 %>% filter(month == unique(df2$month)[k])
-      monthly_uncertainty_temp_okp <- rbind(monthly_uncertainty_temp_okp, as.data.frame(matrix(c(unique(lake$Lake_ID), unique(format(as.Date(lake$time), "%Y-%m")), unique(lake$year), unique(lake$month), mean(lake$p05), mean(lake$p95)), nrow = 1, ncol = 6, dimnames = list(NULL, c("Lake_ID", "date", "year", "month", "p05", "p95")))))
+      monthly_uncertainty_temp_okp <- rbind(monthly_uncertainty_temp_okp, as.data.frame(matrix(c(unique(lake$Lake_ID), unique(format(as.Date(lake$time), "%Y-%m")), unique(lake$year), unique(lake$month), mean(lake$diff.p95.05), median(lake$diff.p95.05)), nrow = 1, ncol = 6, dimnames = list(NULL, c("Lake_ID", "date", "year", "month", "mean.diff.p95.05", "median.diff.p95.05")))))
       
     }
   }
@@ -85,17 +86,17 @@ rm(lake, i, j, k, df1, df2)
 str(monthly_uncertainty_temp_okp)
 monthly_uncertainty_temp_okp$year <- as.numeric(monthly_uncertainty_temp_okp$year)
 monthly_uncertainty_temp_okp$month <- as.numeric(monthly_uncertainty_temp_okp$month)
-monthly_uncertainty_temp_okp$p05 <- as.numeric(monthly_uncertainty_temp_okp$p05)
-monthly_uncertainty_temp_okp$p95 <- as.numeric(monthly_uncertainty_temp_okp$p95)
+monthly_uncertainty_temp_okp$mean.diff.p95.05 <- as.numeric(monthly_uncertainty_temp_okp$mean.diff.p95.05  )
+monthly_uncertainty_temp_okp$median.diff.p95.05 <- as.numeric(monthly_uncertainty_temp_okp$median.diff.p95.05)
 
 
 ##----------------------
 ##COMPUTE TEMPORAL TREND
 ##----------------------
 ##compute on a bioclim and on a 40y period
-period <- 5
+period <- 40
 uncertainty <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(uncertainty) <- c("code_lac", "camp_annee", "id_campagne", "p05", "p95")
+colnames(uncertainty) <- c("code_lac", "camp_annee", "id_campagne", "mean.diff.p95.05", "median.diff.p95.05")
 
 
 for(i in 1:nrow(date_fish_sampling)){
@@ -106,30 +107,30 @@ for(i in 1:nrow(date_fish_sampling)){
     sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::filter(date < format(as.Date(date_fish_sampling$date_pose[i]), "%Y-%m"))
     
     sub_monthly_temp_okp$year2 <- rep(as.numeric(min(sub_monthly_temp_okp$year)):(max(as.numeric(max(sub_monthly_temp_okp$year)))-1), each = 12)
-    sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::select(Lake_ID, date, year2, p05, p95)
-    colnames(sub_monthly_temp_okp) <- c("Lake_ID", "date", "year", "p05", "p95")
+    sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::select(Lake_ID, date, year2, mean.diff.p95.05, median.diff.p95.05)
+    colnames(sub_monthly_temp_okp) <- c("Lake_ID", "date", "year", "mean.diff.p95.05", "median.diff.p95.05")
     
-    annual.p05 <- aggregate(sub_monthly_temp_okp$p05, list(sub_monthly_temp_okp$year), FUN=mean) 
-    annual.p95 <- aggregate(sub_monthly_temp_okp$p95, list(sub_monthly_temp_okp$year), FUN=mean) 
+    annual.mean <- aggregate(sub_monthly_temp_okp$mean.diff.p95.05, list(sub_monthly_temp_okp$year), FUN=mean) 
+    annual.median <- aggregate(sub_monthly_temp_okp$median.diff.p95.05, list(sub_monthly_temp_okp$year), FUN=mean) 
     
     sub_uncertainty <- data.frame(matrix(nrow = 1, ncol = 5))
-    colnames(sub_uncertainty) <- c("code_lac", "camp_annee", "id_campagne", "p05", "p95")
+    colnames(sub_uncertainty) <- c("code_lac", "camp_annee", "id_campagne", "mean.diff.p95.05", "median.diff.p95.05")
     
     sub_uncertainty[1, 1:3] <- date_fish_sampling[i, 1:3]
-    sub_uncertainty[1, 4] <- mean(annual.p05[,2])
-    sub_uncertainty[1, 5] <- mean(annual.p95[,2])
+    sub_uncertainty[1, 4] <- mean(annual.mean[,2])
+    sub_uncertainty[1, 5] <- median(annual.median[,2])
     
     uncertainty <- rbind(uncertainty, sub_uncertainty)
     
-    rm(sub_monthly_temp_okp, annual.p05, annual.p95, sub_uncertainty)
+    rm(sub_monthly_temp_okp, annual.mean, annual.median, sub_uncertainty)
   }
 }
 
 rm(i, j, period)
   
 
-uncertainty_temperature_5y_period <- uncertainty
-mysave(uncertainty_temperature_5y_period, dir = "./outputs/Temperature", overwrite = TRUE)
+uncertainty_temperature_40y_period <- uncertainty
+mysave(uncertainty_temperature_40y_period, dir = "./outputs/Temperature", overwrite = TRUE)
 
 
 ##-----------------------------------------------------------------------##
