@@ -16,6 +16,8 @@ outputs/IndividualSize/lake_individual_size.txt
 outputs/lake_number_gillnets_benthic.txt
 outputs/lake_number_gillnets_pelagic.txt
 outputs/Temperature/datasettrend_258L.rda
+outputs/FoodWebs/community_lake.rda
+outputs/FoodWebs/network_lake.rda
 
 # scripts and associated files
 doc/

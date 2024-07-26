@@ -81,12 +81,11 @@ network_lake %>%
   unnest(data) %>%
   filter(is.na(class_id))
 
-mysave(network_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 
-##--------------
+##-------------------
 ## PLOT LOCAL NETWORK
-##--------------
+##-------------------
 sp_color <- set_color_species(node_list = colnames(metaweb_lake$metaweb),
                               species_list = metaweb_lake$species,
                               resource_list = metaweb_lake$resource)
@@ -120,9 +119,9 @@ legend(x = "bottom",
        ncol = 6)
 
 
-##--------------
+##-------------------------------------------
 ## GET NETWORK CONNECTANCE, Tmax AND RICHNESS
-##--------------
+##-------------------------------------------
 plan(multicore, workers = 3)
 
 network_lake %<>% mutate( network = future_map(network, igraph::graph_from_data_frame, directed = TRUE),
@@ -155,36 +154,36 @@ mysave(network_lake_metrics, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 
 # Compute weighted average trophic level
-myload(weight_fish_lake, dir = "outputs/FoodWebs")
+#myload(weight_fish_lake, dir = "outputs/FoodWebs")
 
 
-size_class_weight_lake <- assign_size_class(data = weight_fish_lake %>%
-                                              filter(!is.na(fish), species %in% metaweb_lake$size_class$species),
-                                            species = species, var = fish,
-                                            classes = metaweb_lake$size_class
-                                            ) %>%
-                          unite(sp_class, species, class_id, sep = "_") %>%
-                          dplyr::select(id_campagne, sp_class, weight) %>%
-                          group_by(id_campagne, sp_class) %>%
-                          summarise(bm = sum(weight)) %>%
-                          ungroup()
+#size_class_weight_lake <- assign_size_class(data = weight_fish_lake %>%
+#                                              filter(!is.na(fish), species %in% metaweb_lake$size_class$species),
+#                                            species = species, var = fish,
+#                                            classes = metaweb_lake$size_class
+#                                            ) %>%
+#                          unite(sp_class, species, class_id, sep = "_") %>%
+#                          dplyr::select(id_campagne, sp_class, weight) %>%
+#                          group_by(id_campagne, sp_class) %>%
+#                          summarise(bm = sum(weight)) %>%
+#                          ungroup()
 
-obs_troph_level <- network_lake_metrics %>% 
-                      select(id_campagne, obs_troph_level) %>%
-                      unnest() %>%
-                      rename(sp_class = species_name) %>%
-                      left_join(size_class_weight_lake, by = c("id_campagne", "sp_class"))
+#obs_troph_level <- network_lake_metrics %>% 
+#                      select(id_campagne, obs_troph_level) %>%
+#                      unnest() %>%
+#                      rename(sp_class = species_name) %>%
+#                      left_join(size_class_weight_lake, by = c("id_campagne", "sp_class"))
 
-weighted_trophic_lvl <- obs_troph_level %>%
-                          filter(!sp_class %in% metaweb_lake$resource) %>%
-                          group_by(id_campagne) %>%
-                          summarise(w_trph_lvl_avg = round(sum(obs_troph_level * bm / sum(bm)), 2))
+#weighted_trophic_lvl <- obs_troph_level %>%
+#                          filter(!sp_class %in% metaweb_lake$resource) %>%
+#                          group_by(id_campagne) %>%
+#                          summarise(w_trph_lvl_avg = round(sum(obs_troph_level * bm / sum(bm)), 2))
 
-if ("w_trph_lvl_avg" %in% colnames(network_lake_metrics)) {
-  network_lake_metrics %<>% select(-w_trph_lvl_avg)
-}
+#if ("w_trph_lvl_avg" %in% colnames(network_lake_metrics)) {
+#  network_lake_metrics %<>% select(-w_trph_lvl_avg)
+#}
 
-network_lake_metrics %<>%
-  left_join(weighted_trophic_lvl, by = "id_campagne")
+#network_lake_metrics %<>%
+#  left_join(weighted_trophic_lvl, by = "id_campagne")
 
-mysave(network_lake_metrics, dir = "outputs/FoodWebs", overwrite = TRUE)
+#mysave(network_lake_metrics, dir = "outputs/FoodWebs", overwrite = TRUE)

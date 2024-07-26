@@ -26,9 +26,9 @@ myload(ind_size, dir = "outputs/IndividualSize")
 #colnames(code_species) <- c("code", "latin_name")
 #write.table(code_species, "_files_to_send/codage_especes.txt", row.names = FALSE)
 
-##--------------
+##-------------
 ## CODE SPECIES
-##--------------
+##-------------
 code_species_river_lake <- read.delim("data/code_species_river_lake.txt")
 code_species_lake <- code_species_river_lake %>% select(sp_code, sp_lake) %>% drop_na(.)  
 code_species_lake$sp_lake <- gsub(" ", "_", code_species_lake$sp_lake)
@@ -39,9 +39,9 @@ colnames(ind_size)[6] <- "species"
 ind_size <- ind_size %>% dplyr::filter(fish >= 25 & fish <= 965)
 
 
-##--------------
+##---------------------------
 ## KEEP ONLY BENTHIC GILLNETS
-##--------------
+##---------------------------
 #benthic_sampling_protocol <- sampling_protocol %>% filter(cd_engin_peche == "FB")
 #length(unique(benthic_sampling_protocol$id_campagne))
 #length(unique(benthic_sampling_protocol$id_prelev_poisson))
@@ -52,10 +52,10 @@ ind_size <- ind_size %>% dplyr::filter(fish >= 25 & fish <= 965)
 #length(unique(benthic_ind_size$id_prelev_poisson))
 
 
-##--------------
+##------------------
 ## BUILD THE METAWEB
-##--------------
-myload(pred_win, fish_diet_shift, resource_diet_shift, dir = "data/FoodWebs")
+##------------------
+myload(pred_win, fish_diet_shift, resource_diet_shift, dir = "data")
 
 
 fish_diet_shift %<>%
@@ -69,7 +69,7 @@ resource_diet_shift %<>%
   rename(species = "species_code")
 
 
-metaweb_lake <- build_metaweb(data = benthic_ind_size,
+metaweb_lake <- build_metaweb(data = ind_size,
                               species = species,
                               size = fish,
                               pred_win = pred_win,
@@ -95,9 +95,9 @@ mysave(metaweb_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
 #write.table(size_class, "_files_to_send/classes_tailles_especes.txt", row.names = FALSE)
 
 
-##--------------
+##-----------------
 ## PLOT THE METAWEB
-##--------------
+##-----------------
 sp_color <- set_color_species(node_list = colnames(metaweb_lake$metaweb),
                               species_list = metaweb_lake$species,
                               resource_list = metaweb_lake$resource)
@@ -130,9 +130,9 @@ legend(x = "bottom",
        ncol = 6)
 
 
-##--------------
+##------------------------
 ## METAWEB CHARACTERISTICS
-##--------------
+##------------------------
 ind_lake <- as.data.frame(metaweb_lake$metaweb %>% NetIndices::GenInd() %>% c(., Tlvl = mean(NetIndices::TrophInd(metaweb_lake$metaweb)$TL)))
 ind_net_to_keep <- c("N", "Ltot", "LD", "C", "Tlvl")
 ind_lake <- ind_lake %>% select(ind_net_to_keep)

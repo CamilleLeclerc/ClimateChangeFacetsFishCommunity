@@ -21,9 +21,9 @@ myload(sampling_protocol, station, dir = "outputs")
 myload(ind_size, dir = "outputs/IndividualSize")
 
 
-##----------------------------
+##-----------------------
 ## COMPUTE FISH BODY MASS
-##----------------------------
+##-----------------------
 #Compute fish body mass 
 #@param length in mm numeric 
 #@param gram logical TRUE (default), miligram if not
@@ -63,20 +63,17 @@ length(unique(benthic_ind_size$id_prelev_poisson))
 
 weight_fish_lake <- benthic_ind_size %>% mutate(weight = calc_fish_body_mass(fish))
 
-mysave(weight_fish_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
+#mysave(weight_fish_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
 
 
-##----------------------------
+##-----------------------
 ## GET BIOMASS BY SPECIES
-##----------------------------
+##-----------------------
 # Lake
 community_lake <- weight_fish_lake %>% group_by(id_campagne, species) %>% #group_by(code_lac, camp_annee, id_campagne, id_prelev_poisson, id_point_prelev, species)
                     summarise(biomass = sum(weight, na.rm = TRUE),
                               length = mean(fish, na.rm = TRUE),
                               nind = n())
-
-mysave(community_lake, dir = "outputs/FoodWebs", overwrite = TRUE)
-
 
 
 com_lake <- community_lake %>% group_by(id_campagne) %>% #group_by(code_lac, camp_annee, id_campagne, id_prelev_poisson, id_point_prelev)
