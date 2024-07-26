@@ -27,3 +27,4 @@ rscripts/essai.R
 rscripts/14_SEManalysisSITypeLakes_part1.R
 rscripts/14_SEManalysisSITypeLakes_part2.R
 rfunctions/modifications_piecewiseSEM.R
+rfunctions/building_dataset.R
