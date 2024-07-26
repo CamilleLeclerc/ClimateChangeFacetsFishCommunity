@@ -8,18 +8,18 @@
 # Session Data files
 .RData
 
-# Large files
+# Large and/or useless files
 data/fish_data.csv
+data/plan_deau_lacs_caracteristiques.csv
 data/lake_temperature/
 outputs/IndividualSize/lake_individual_size.txt
-data/plan_deau_lacs_caracteristiques.csv
+outputs/lake_number_gillnets_benthic.txt
+outputs/lake_number_gillnets_pelagic.txt
 outputs/Temperature/datasettrend_258L.rda
 
 # scripts and associated files
 doc/
 rscripts/01_Number_of_gillnets_laying_by_lake_and_year.R
-outputs/lake_number_gillnets_benthic.txt
-outputs/lake_number_gillnets_pelagic.txt
 rscripts/15_SEManalysisSIClimateWarming.R
 rscripts/essai.R
 rscripts/15_SEManalysisSITypeLakes_part1.R

@@ -18,13 +18,8 @@ txt_files_df <- lapply(txt_files_ls, function(x) {read.table(file = x, header = 
 combined_df <- do.call("rbind", lapply(txt_files_df, as.data.frame)) 
 combined_df <- combined_df[!(combined_df$code_lac == "ANN74" & combined_df$camp_annee == 2012),]
 combined_df <- combined_df[!(combined_df$code_lac == "LEM74" & combined_df$camp_annee == 2015),]
-write.table(combined_df, "outputs/IndividualSize/lake_individual_size.txt", row.names = FALSE)
+lake_size <- combined_df
 rm(txt_files_ls, txt_files_df, combined_df)
-
-# Import file
-lake_size <- read_delim(file = "outputs/IndividualSize/lake_individual_size.txt",
-                        delim = " ")
-
 summary(lake_size)
 
 
