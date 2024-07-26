@@ -58,9 +58,9 @@ ind_size <- as.data.frame(ind_size)
 
 ##MEAN SIZE OF SPECIES
 species_mean_size <- ind_size %>%
-  select(species, fish) %>%
-  group_by(species) %>%
-  summarise(mean_size = mean(fish)/10)
+  dplyr::select(species, fish) %>%
+  dplyr::group_by(species) %>%
+  dplyr::summarise(mean_size = mean(fish)/10)
 quantile(species_mean_size$mean_size, na.rm = T, probs = c(0.33333, 0.6666))
 species_mean_size$size_category <- NA
 species_mean_size$size_category[species_mean_size$mean_size <= 12.5] <- "< 12.5 cm"
@@ -75,47 +75,47 @@ species_mean_size$size_category[is.na(species_mean_size$size_category)] <- "12.5
 species_occurrence <- ind_size %>% select(code_lac, species) %>% unique(.)
 species_occurrence$presence <- 1
 species_occurrence <- species_occurrence %>%
-  select(species, presence) %>%
-  group_by(species) %>%
-  summarise(occurrence = sum(presence))
+  dplyr::select(species, presence) %>%
+  dplyr::group_by(species) %>%
+  dplyr::summarise(occurrence = sum(presence))
 species_occurrence$percentage <- (species_occurrence$occurrence / nrow(ind_size %>% select(code_lac) %>% unique(.)))*100
 
 
 ##NUMBER OF TIMES SPECIES REACH THE MAXIMUM TROPHIC LEVEL 
-length(unique(network_lake_metrics$id_campagne)) ; length(unique(dataset.thermal.trajectories$id.samp))
-network_lake_metrics <- network_lake_metrics %>% dplyr::filter(id_campagne %in% dataset.thermal.trajectories$id.samp)
+#length(unique(network_lake_metrics$id_campagne)) ; length(unique(dataset.thermal.trajectories$id.samp))
+#network_lake_metrics <- network_lake_metrics %>% dplyr::filter(id_campagne %in% dataset.thermal.trajectories$id.samp)
 
-species_maxTL <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
+#species_maxTL <- data.frame(matrix(nrow = 0, ncol = 5))
+#colnames(species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
 
-for(i in 361:nrow(network_lake_metrics)){
+#for(i in 1:nrow(network_lake_metrics)){
 #issue i = 18 ; 269 ; 360
 
-sub <- network_lake_metrics[[6]][[i]]
-sub <- sub %>% top_n(1, obs_troph_level)
+#sub <- network_lake_metrics[[6]][[i]]
+#sub <- sub %>% top_n(1, obs_troph_level)
 
-sub_species_maxTL <- data.frame(matrix(nrow = 1, ncol = 5))
-colnames(sub_species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
-sub_species_maxTL[1, 1] <- network_lake_metrics[[1]][[i]]
-sub_species_maxTL[1, 2] <- sub$species_name[2]
-sub_species_maxTL[1, 3] <- substr(sub$species_name[2], 0, 3)
-sub_species_maxTL[1, 4] <- dfspeciestype %>% dplyr::filter(code == substr(sub$species_name[2], 0, 3)) %>% dplyr::select(species)
-sub_species_maxTL[1, 5] <- sub$obs_troph_level[2]
+#sub_species_maxTL <- data.frame(matrix(nrow = 1, ncol = 5))
+#colnames(sub_species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
+#sub_species_maxTL[1, 1] <- network_lake_metrics[[1]][[i]]
+#sub_species_maxTL[1, 2] <- sub$species_name[2]
+#sub_species_maxTL[1, 3] <- substr(sub$species_name[2], 0, 3)
+#sub_species_maxTL[1, 4] <- dfspeciestype %>% dplyr::filter(code == substr(sub$species_name[2], 0, 3)) %>% dplyr::select(species)
+#sub_species_maxTL[1, 5] <- sub$obs_troph_level[2]
 
-species_maxTL <- rbind(species_maxTL, sub_species_maxTL)
+#species_maxTL <- rbind(species_maxTL, sub_species_maxTL)
 
-rm(sub, sub_species_maxTL)
+#rm(sub, sub_species_maxTL)
 
-}
-rm(i)
+#}
+#rm(i)
 
-species_maxTL$count <- 1
+#species_maxTL$count <- 1
 
-maxTL <- species_maxTL %>%
-  select(species, count) %>%
-  group_by(species) %>%
-  summarise(maxTL = sum(count))
-maxTL$maxTL.percentage <- (maxTL$maxTL/length(unique(dataset.thermal.trajectories$id.samp)))*100
+#maxTL <- species_maxTL %>%
+#  select(species, count) %>%
+#  group_by(species) %>%
+#  summarise(maxTL = sum(count))
+#maxTL$maxTL.percentage <- (maxTL$maxTL/length(unique(dataset.thermal.trajectories$id.samp)))*100
 
 
 ##COMBINE ALL INFORMATIONS

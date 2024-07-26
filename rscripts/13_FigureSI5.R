@@ -42,8 +42,8 @@ myload(dataset_9BSCBenthicPelagicGillnetSelectivity,
 ##----------------
 summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
 dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
-count.per.lake <- dataset.thermal.trajectories %>% group_by(lake.code) %>% 
-  summarise(total_count = n(),.groups = 'drop') %>%
+count.per.lake <- dataset.thermal.trajectories %>% dplyr::group_by(lake.code) %>% 
+  dplyr::summarise(total_count = n(),.groups = 'drop') %>%
   as.data.frame()
 
 

@@ -27,7 +27,7 @@ colnames(df.speciestype) ; colnames(df.speciestype)[1] <- "species"
 
 #--
 
-myload(ind_size, dir = "data/IndividualSize")
+myload(ind_size, dir = "outputs/IndividualSize")
 
 head(ind_size)
 df.fish <- ind_size %>% dplyr::select(id_campagne, species, fish)

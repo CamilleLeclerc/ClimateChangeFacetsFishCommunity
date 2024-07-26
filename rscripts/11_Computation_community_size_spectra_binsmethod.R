@@ -88,6 +88,6 @@ for(i in 1:length(id)){
   
   rm(sub.df, size, SS.parameters, frequencytable)
 }
-CSSOLSfishcommunityBenthicPelagic <- CSSOLSfishcommunity
-CSSOLSfrequencytableBenthicPelagic <- CSSOLSfrequencytable
-mysave(CSSOLSfishcommunityBenthicPelagic, CSSOLSfrequencytableBenthicPelagic, dir = "./outputs/CommunitySizeSpectra", overwrite = TRUE)
+CSSOLSfishcommunity <- CSSOLSfishcommunity
+CSSOLSfrequencytable <- CSSOLSfrequencytable
+mysave(CSSOLSfishcommunity, CSSOLSfrequencytable, dir = "./outputs/CommunitySizeSpectra", overwrite = TRUE)

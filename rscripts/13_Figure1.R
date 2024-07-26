@@ -72,44 +72,13 @@ coord <- dataset.thermal.trajectories %>%
                    bio1.slope.40y = mean(bio1.slope.40y),
                    bio1.current = mean(bio1.current))
 str(coord)
-coord.sf <- st_as_sf(coord, coords = c("long", "lat"), crs = 4326)
-data <- bi_class(coord.sf, x = bio1.slope.40y, y = bio1.current, style = "quantile", dim = 4)
-
-
-map <- ggplot() +
-  geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
-  geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
-  geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
-  geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
-  geom_sf(data = data, mapping = aes(fill = bi_class),  shape = 21, size = 2, color = "black", show.legend = FALSE) +
-  bi_scale_fill(pal = "Brown2", dim = 4) +
-  annotation_scale(location = "bl", width_hint = 0.1) +
-  annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
-  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
-  map_theme +
-  theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
-map
-#4.5 x 4.5
-
-legend <- bi_legend(pal = "Brown2",
-                    dim = 4,
-                    xlab = "bio1.slope.40y",
-                    ylab = "bio1.current",
-                    #rotate_pal = TRUE,
-                    #flip_axes = TRUE,
-                    size = 8)
-ggdraw() + draw_plot(legend, 0.2, .65, 0.2, 0.2)
-#"Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown"/"Brown2", "DkBlue"/"DkBlue2", "DkCyan"/"DkCyan2", "DkViolet"/"DkViolet2", "GrPink"/"GrPink2", "PinkGrn", "PurpleGrn", or "PurpleOr".
-
-
-data$bio1.slope.40y <- data$bio1.slope.40y * 10 #in°C/dec
-data$class.bio1.slope.40y <- NA
-data$class.bio1.slope.40y[data$bio1.slope.40y < 0] <- "A"
-data$class.bio1.slope.40y[data$bio1.slope.40y >= 0 & data$bio1.slope.40y < 0.25] <- "B"
-data$class.bio1.slope.40y[data$bio1.slope.40y >= 0.25 & data$bio1.slope.40y < 0.50] <- "C"
-data$class.bio1.slope.40y[data$bio1.slope.40y >= 0.50] <- "D"
+coord <- st_as_sf(coord, coords = c("long", "lat"), crs = 4326)
+coord$bio1.slope.40y <- coord$bio1.slope.40y * 10 #in°C/dec
+coord$class.bio1.slope.40y <- NA
+coord$class.bio1.slope.40y[coord$bio1.slope.40y < 0] <- "A"
+coord$class.bio1.slope.40y[coord$bio1.slope.40y >= 0 & coord$bio1.slope.40y < 0.25] <- "B"
+coord$class.bio1.slope.40y[coord$bio1.slope.40y >= 0.25 & coord$bio1.slope.40y < 0.50] <- "C"
+coord$class.bio1.slope.40y[coord$bio1.slope.40y >= 0.50] <- "D"
 
 
 
@@ -118,7 +87,7 @@ map <- ggplot() +
   geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
   geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
   geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) + 
-  geom_sf(data = data, mapping = aes(fill = bio1.current, shape = class.bio1.slope.40y), size = 2, color = "black", show.legend = FALSE) +
+  geom_sf(data = coord, mapping = aes(fill = bio1.current, shape = class.bio1.slope.40y), size = 2, color = "black", show.legend = FALSE) +
   scale_shape_manual(values = c(25, 21, 22, 23)) +
   scale_fill_continuous_sequential(palette = "Heat") +
   annotation_scale(location = "bl", width_hint = 0.1) +
@@ -381,7 +350,7 @@ summary(mod.size)
 
 
 
-plot_grid(pTemp, psizespecies, 
+plot_grid(map, psizespecies, 
           pslope, pmidpoint,
           pconnect, pmaxtl,
           labels = c("A", "B", "C", "D", "E", "F"),

@@ -56,9 +56,9 @@ native <- ind_size %>% dplyr::filter(type == "native") %>% dplyr::select(fish)
 mean(nis[,1])/mean(native[,1])
 
 summary_ind_size <- ind_size %>%
-  select(id_campagne, type, fish) %>%
-  group_by(id_campagne, type) %>%
-  summarise(mean_size = mean(fish),
+  dplyr::select(id_campagne, type, fish) %>%
+  dplyr::group_by(id_campagne, type) %>%
+  dplyr::summarise(mean_size = mean(fish),
             median_size = median(fish),
             max_size = max(fish))
 summary_ind_size_nis <- summary_ind_size %>% dplyr::filter(type == "non-indigenous") %>% as.data.frame(.)

@@ -13,6 +13,9 @@ library(semEff)
 library(stringr)
 library(tidyr)
 library(dplyr)
+library(tidyverse)
+library(ggbeeswarm)
+library(gghalves)
 
 ##FUNCTIONS##
 source("./rfunctions/misc.R")
@@ -176,13 +179,6 @@ tot.sp$response <- "Total species richness"
 DIE <- rbind(connectance, maxtl, css.slope, css.elevation, tot.sp)
 colnames(DIE) <- c('path', 'effect', 'Predictor', 'response')
 str(DIE)
-
-
-library(tidyverse)
-library(ggbeeswarm)
-library(gghalves)
-
-# default
 ggplot(DIE, aes(x = response, y = effect)) +
   geom_abline(slope = 0, intercept = 0, linetype = 2) +
   geom_half_boxplot(nudge = 0.05, outlier.color = NA, color = "black") +
@@ -194,3 +190,6 @@ ggplot(DIE, aes(x = response, y = effect)) +
   theme(axis.text = element_text(size = 14, colour = "#000000"),
         axis.title = element_text(size = 16, face = "bold", colour = "#000000"))
 #4 x 3 
+
+#sem_details_indirect_effect_all_lakes<- DIE
+#mysave(sem_details_indirect_effect_all_lakes, dir = "outputs/SEM", overwrite = TRUE)

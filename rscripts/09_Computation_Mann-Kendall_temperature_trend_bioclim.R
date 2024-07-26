@@ -39,7 +39,7 @@ daily_temp_okp = as.data.frame(daily_temp_okp)
 
 
 ##get read of useless symbols
-daily_temp_okp$Lake_ID <- str_sub(daily_temp_okp$Lake_ID, start = 48, end = 52)
+daily_temp_okp$Lake_ID <- str_sub(daily_temp_okp$Lake_ID, start = 25, end = 29)
 daily_temp_okp$Lake_ID[daily_temp_okp$Lake_ID == "GRO21"] <- "GRO21b"
 daily_temp_okp$Lake_ID[daily_temp_okp$Lake_ID == "LER27"] <- "LER27a"
 head(daily_temp_okp)
@@ -54,7 +54,7 @@ daily_temp_okp <- daily_temp_okp %>% dplyr::select(Lake_ID, date, year, month, d
 rm(list_of_files)
 
 
-date_fish_sampling <- read.csv("./B_Thermal_trajectories/outputs/date_fish_sampling.txt", sep="")
+date_fish_sampling <- read.csv("./outputs/date_fish_sampling.txt", sep="")
 length(unique(date_fish_sampling$code_lac))  
 
 
@@ -133,7 +133,6 @@ for(i in 1:nrow(date_fish_sampling)){
     sub_monthly_temp_okp <- monthly_temp_okp %>% dplyr::filter(Lake_ID == date_fish_sampling[i, 1])
     sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::filter(date >= format(as.Date(ymd(date_fish_sampling$date_pose[i]) - years(period[j])), "%Y-%m"))
     sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::filter(date < format(as.Date(date_fish_sampling$date_pose[i]), "%Y-%m"))
-
     sub_monthly_temp_okp$year2 <- rep(as.numeric(min(sub_monthly_temp_okp$year)):(max(as.numeric(max(sub_monthly_temp_okp$year)))-1), each = 12)
     sub_monthly_temp_okp <- sub_monthly_temp_okp %>% dplyr::select(Lake_ID, date, year2, tmean.epi, tmin.epi, tmax.epi)
     colnames(sub_monthly_temp_okp) <- c("Lake_ID", "date", "year", "tmean.epi", "tmin.epi", "tmax.epi")
@@ -340,13 +339,13 @@ colnames(temporal_trend_bio11) <- c("lake.code", "year.samp", "id.samp", "bio11.
 
 
 
-datasetTempTrendBioclim40_258L <- left_join(temporal_trend_bio1, temporal_trend_bio2 %>% dplyr::select(id.samp, bio2.slope.50y, bio2.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio3 %>% dplyr::select(id.samp, bio3.slope.50y, bio3.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio4 %>% dplyr::select(id.samp, bio4.slope.50y, bio4.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio5 %>% dplyr::select(id.samp, bio5.slope.50y, bio5.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio6 %>% dplyr::select(id.samp, bio6.slope.50y, bio6.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio7 %>% dplyr::select(id.samp, bio7.slope.50y, bio7.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio10 %>% dplyr::select(id.samp, bio10.slope.50y, bio10.pvalue.50y), by = "id.samp")
-datasetTempTrendBioclim40_258L <- left_join(datasetTempTrendBioclim40_258L, temporal_trend_bio11 %>% dplyr::select(id.samp, bio11.slope.50y, bio11.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(temporal_trend_bio1, temporal_trend_bio2 %>% dplyr::select(id.samp, bio2.slope.50y, bio2.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio3 %>% dplyr::select(id.samp, bio3.slope.50y, bio3.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio4 %>% dplyr::select(id.samp, bio4.slope.50y, bio4.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio5 %>% dplyr::select(id.samp, bio5.slope.50y, bio5.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio6 %>% dplyr::select(id.samp, bio6.slope.50y, bio6.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio7 %>% dplyr::select(id.samp, bio7.slope.50y, bio7.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio10 %>% dplyr::select(id.samp, bio10.slope.50y, bio10.pvalue.50y), by = "id.samp")
+datasetTempTrendBioclim40 <- left_join(datasetTempTrendBioclim40, temporal_trend_bio11 %>% dplyr::select(id.samp, bio11.slope.50y, bio11.pvalue.50y), by = "id.samp")
 
-mysave(datasetTempTrendBioclim40_258L, dir = "./outputs/Temperature", overwrite = TRUE)
+mysave(datasetTempTrendBioclim40, dir = "./outputs/Temperature", overwrite = TRUE)

@@ -37,7 +37,7 @@ daily_temp_okp = as.data.frame(daily_temp_okp)
 
 
 ##get read of useless symbols
-daily_temp_okp$Lake_ID <- str_sub(daily_temp_okp$Lake_ID, start = 48, end = 52)
+daily_temp_okp$Lake_ID <- str_sub(daily_temp_okp$Lake_ID, start = 25, end = 29)
 daily_temp_okp$Lake_ID[daily_temp_okp$Lake_ID == "GRO21"] <- "GRO21b"
 daily_temp_okp$Lake_ID[daily_temp_okp$Lake_ID == "LER27"] <- "LER27a"
 head(daily_temp_okp)
@@ -218,13 +218,13 @@ rm(i, j, period)
 
 
 
-datasetTempCurrentBioclim_258L <- left_join(bio1, bio2 %>% dplyr::select(id.samp, bio2.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio3 %>% dplyr::select(id.samp, bio3.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio4 %>% dplyr::select(id.samp, bio4.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio5 %>% dplyr::select(id.samp, bio5.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio6 %>% dplyr::select(id.samp, bio6.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio7 %>% dplyr::select(id.samp, bio7.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio10 %>% dplyr::select(id.samp, bio10.current), by = "id.samp")
-datasetTempCurrentBioclim_258L <- left_join(datasetTempCurrentBioclim_258L, bio11 %>% dplyr::select(id.samp, bio11.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(bio1, bio2 %>% dplyr::select(id.samp, bio2.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio3 %>% dplyr::select(id.samp, bio3.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio4 %>% dplyr::select(id.samp, bio4.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio5 %>% dplyr::select(id.samp, bio5.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio6 %>% dplyr::select(id.samp, bio6.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio7 %>% dplyr::select(id.samp, bio7.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio10 %>% dplyr::select(id.samp, bio10.current), by = "id.samp")
+datasetTempCurrentBioclim <- left_join(datasetTempCurrentBioclim, bio11 %>% dplyr::select(id.samp, bio11.current), by = "id.samp")
 
-mysave(datasetTempCurrentBioclim_258L, dir = "./outputs/Temperature", overwrite = TRUE)
+mysave(datasetTempCurrentBioclim, dir = "./outputs/Temperature", overwrite = TRUE)
