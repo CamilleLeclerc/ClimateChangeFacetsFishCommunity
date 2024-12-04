@@ -147,6 +147,3 @@ for (i in 1:length(unique(sub.db.fish$code_lac))){
 }
 
 rm(i, j, k, sub.lake, sub.year, sub.strate, sub.size, df.size, df.size.final)
-
-
-
