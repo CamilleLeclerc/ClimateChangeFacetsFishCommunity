@@ -4,11 +4,21 @@ rm(list = ls()) #Removes all objects from the current workspace (R memory)
 ##------------------------------
 ##LOADING PACKAGES AND FUNCTIONS
 ##------------------------------
-##PACKAGES
+##PACKAGES##
 library(cowplot)
 library(dplyr)
-library(forcats)
+library(ggbeeswarm)
+library(ggbreak)
+library(ggh4x)
 library(ggplot2)
+library(ggpubr)
+library(ggspatial)
+library(kableExtra)
+library(lemon)
+library(purrr)
+library(rnaturalearth)
+library(rstatix)
+library(sf)
 library(stringr)
 library(tidyr)
 library(tidyverse)
@@ -22,174 +32,59 @@ source("./rfunctions/theme_map.R")
 ##--------------
 ## LOAD DATASETS
 ##--------------
-myload(ind_size, dir = "./outputs/IndividualSize")
-myload(network_lake_metrics, dir = "./outputs/FoodWebs")
-dfspeciestype <- read.delim("./data/Species_type.txt")
-code_species_river_lake <- read.delim("data/code_species_river_lake.txt")
-myload(dataset_9BSCBenthicPelagicGillnetSelectivity, dir = "outputs")
+myload(dataset_9BSCBenthicPelagicGillnetSelectivity,
+       dir = "outputs")
+lake.type <- read.csv("./data/Lake_type.txt", sep="")
 
 
 ##----------------
 ## PREPARE DATASET
 ##----------------
+summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
 dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
-
-code_species_river_lake <- code_species_river_lake %>% dplyr::select(sp_code, sp_lake) %>% drop_na()
-colnames(code_species_river_lake) <- c("code", "species")
-
-colnames(dfspeciestype)[1] <- "species"
-dfspeciestype <- left_join(dfspeciestype, code_species_river_lake, by = 'species')
-dfspeciestype[42, 3] <- "TRF"
-
-length(unique(ind_size$code_lac)) ; length(unique(dataset.thermal.trajectories$lake.code))
-ind_size <- ind_size %>% dplyr::filter(id_campagne %in% dataset.thermal.trajectories$id.samp)
-nrow(ind_size %>% dplyr::select(code_lac, camp_annee) %>% unique(.)) ; nrow(dataset.thermal.trajectories %>% dplyr::select(lake.code, year.samp) %>% unique(.))
-ind_size$species <- sub("_", " ", ind_size$species)
-ind_size$species[ind_size$species == "Salmo trutta_fario"] <- "Salmo trutta"
-ind_size$species[ind_size$species == "Salmo trutta_lacustris"] <- "Salmo trutta"
-ind_size$species[ind_size$species == "Abramis"] <- "Abramis brama"
-ind_size <- ind_size %>% filter(!(species %in% c("Hybride br�me-gardon","Hybrides de_cyprinid�s", "Percidae", "Cyprinidae", "Mugilidae")))
-ind_size <- ind_size %>% filter(!(id_campagne %in% c(44, 515)))
-ind_size <- ind_size %>% dplyr::filter(fish >= 25 & fish <= 965)
-summary(ind_size)
-ind_size <- ind_size %>% drop_na(.)
-ind_size <- as.data.frame(ind_size)
+count.per.lake <- dataset.thermal.trajectories %>% dplyr::group_by(lake.code) %>% 
+  dplyr::summarise(total_count = n(),.groups = 'drop') %>%
+  as.data.frame()
 
 
-##MEAN SIZE OF SPECIES
-species_mean_size <- ind_size %>%
-  dplyr::select(species, fish) %>%
-  dplyr::group_by(species) %>%
-  dplyr::summarise(mean_size = mean(fish)/10)
-quantile(species_mean_size$mean_size, na.rm = T, probs = c(0.33333, 0.6666))
-species_mean_size$size_category <- NA
-species_mean_size$size_category[species_mean_size$mean_size <= 12.5] <- "< 12.5 cm"
-species_mean_size$size_category[species_mean_size$mean_size >= 25] <- "> 25 cm"
-#species_mean_size$size_category[species_mean_size$mean_size > 10 & species_mean_size$mean_size <= 15] <- "10-15 cm"
-#species_mean_size$size_category[species_mean_size$mean_size > 15 & species_mean_size$mean_size <= 20] <- "15-20 cm"
-#species_mean_size$size_category[species_mean_size$mean_size > 20 & species_mean_size$mean_size <= 25] <- "20-25 cm"
-species_mean_size$size_category[is.na(species_mean_size$size_category)] <- "12.5-25 cm"
+##------------------------------
+## SPATIAL DISTRIBUTION OF LAKES
+##------------------------------
+worldmap <- ne_countries(continent = 'europe', scale = 'large', type = 'countries', returnclass = 'sf')
+fr <- data.frame(Country = "France", Focus = "YES") 
+world_joined <- left_join(worldmap, fr, by = c("name" = "Country"))
 
+francemap <- ne_countries(country = 'france', scale = 'large', type = 'countries', returnclass = 'sf')
 
-##OCCURENCE OF SPECIES
-species_occurrence <- ind_size %>% select(code_lac, species) %>% unique(.)
-species_occurrence$presence <- 1
-species_occurrence <- species_occurrence %>%
-  dplyr::select(species, presence) %>%
-  dplyr::group_by(species) %>%
-  dplyr::summarise(occurrence = sum(presence))
-species_occurrence$percentage <- (species_occurrence$occurrence / nrow(ind_size %>% select(code_lac) %>% unique(.)))*100
+lakes <- ne_download(scale = 10, type = 'lakes', category = 'physical')
 
+rivers <- ne_download(scale = 10, type = 'rivers_lake_centerlines', category = 'physical')
 
-##NUMBER OF TIMES SPECIES REACH THE MAXIMUM TROPHIC LEVEL 
-#length(unique(network_lake_metrics$id_campagne)) ; length(unique(dataset.thermal.trajectories$id.samp))
-#network_lake_metrics <- network_lake_metrics %>% dplyr::filter(id_campagne %in% dataset.thermal.trajectories$id.samp)
+sf::sf_use_s2(FALSE)
+francelakes <- st_intersection(st_as_sf(lakes), st_as_sf(francemap))
+francerivers <- st_intersection(st_as_sf(rivers), st_as_sf(francemap))
 
-#species_maxTL <- data.frame(matrix(nrow = 0, ncol = 5))
-#colnames(species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
-
-#for(i in 1:nrow(network_lake_metrics)){
-#issue i = 18 ; 269 ; 360
-
-#sub <- network_lake_metrics[[6]][[i]]
-#sub <- sub %>% top_n(1, obs_troph_level)
-
-#sub_species_maxTL <- data.frame(matrix(nrow = 1, ncol = 5))
-#colnames(sub_species_maxTL) <- c("id_campagne", "trophic_species", "code_species", "species", "TL")
-#sub_species_maxTL[1, 1] <- network_lake_metrics[[1]][[i]]
-#sub_species_maxTL[1, 2] <- sub$species_name[2]
-#sub_species_maxTL[1, 3] <- substr(sub$species_name[2], 0, 3)
-#sub_species_maxTL[1, 4] <- dfspeciestype %>% dplyr::filter(code == substr(sub$species_name[2], 0, 3)) %>% dplyr::select(species)
-#sub_species_maxTL[1, 5] <- sub$obs_troph_level[2]
-
-#species_maxTL <- rbind(species_maxTL, sub_species_maxTL)
-
-#rm(sub, sub_species_maxTL)
-
-#}
-#rm(i)
-
-#species_maxTL$count <- 1
-
-#maxTL <- species_maxTL %>%
-#  select(species, count) %>%
-#  group_by(species) %>%
-#  summarise(maxTL = sum(count))
-#maxTL$maxTL.percentage <- (maxTL$maxTL/length(unique(dataset.thermal.trajectories$id.samp)))*100
-
-
-##COMBINE ALL INFORMATIONS
-df <- left_join(dfspeciestype, species_mean_size, by = 'species')
-df <- left_join(df, species_occurrence, by = 'species')
-df <- df %>% drop_na()
-head(df)
-
-
-## PLOT NATIVE SPECIES
-# Filter data for native species only
-df.native <- df %>% filter(type == "native")
-
-# Reorder species by their percentage values
-df.native <- df.native %>% mutate(species = fct_reorder(species, percentage, .desc = FALSE))
-
-# Create the plot for native species only
-native <- ggplot(df.native , aes(y = species, x = percentage, fill = size_category)) +
-  # Add bars for the percentages
-  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  # Add rectangles to represent 100% height
-  geom_rect(data = df.native  %>% distinct(species, type),
-            aes(ymin = as.numeric(factor(species)) - 0.35, 
-                ymax = as.numeric(factor(species)) + 0.35,
-                xmin = 0, xmax = 100),
-            inherit.aes = FALSE,
-            color = "black", fill = NA, size = 0.5) +
-  # Customize colors for size categories
-  scale_fill_manual(values = c("> 25 cm" = "#979a9b", "12.5-25 cm" = "#c1a59d", "< 12.5 cm" = "#f7c8a4")) +
-  # Customize labels and theme
-  labs(y = NULL, x = "Percentage", fill = "Mean size") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 14, colour = "#000000", face = "italic"),
-        axis.text.x = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
-native 
-
-
-## PLOT EXOTIC SPECIES
-# Filter data for exotic species only
-df.exotic <- df %>% filter(type == "non-indigenous")
-
-# Reorder species by their percentage values
-df.exotic <- df.exotic %>% mutate(species = fct_reorder(species, percentage, .desc = FALSE))
-
-# Create the plot for exotic species only
-exotic <- ggplot(df.exotic , aes(y = species, x = percentage, fill = size_category)) +
-  # Add bars for the percentages
-  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  # Add rectangles to represent 100% height
-  geom_rect(data = df.exotic  %>% distinct(species, type),
-            aes(ymin = as.numeric(factor(species)) - 0.35, 
-                ymax = as.numeric(factor(species)) + 0.35,
-                xmin = 0, xmax = 100),
-            inherit.aes = FALSE,
-            color = "black", fill = NA, size = 0.5) +
-  # Customize colors for size categories
-  scale_fill_manual(values = c("> 25 cm" = "#979a9b", "12.5-25 cm" = "#c1a59d", "< 12.5 cm" = "#f7c8a4")) +
-  # Customize labels and theme
-  labs(y = NULL, x = "Percentage", fill = "Mean size") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 14, colour = "#000000", face = "italic"),
-        axis.text.x = element_text(size = 14, colour = "#000000"),
-        axis.title = element_text(size = 16, face = "bold", colour = "#000000"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
-exotic 
-
-
-plot_grid(native, exotic,
-          labels = c("A", "B"),
-          ncol = 2, nrow = 1, align = "v")
-#10 x 8; portrait
+coord <- dataset.thermal.trajectories %>% dplyr::select(lake.code, lat, long) %>% unique(.)
+coord <- left_join(coord, count.per.lake, by = 'lake.code')
+coord <- left_join(coord, lake.type, by = 'lake.code')
+str(coord)
+coord$total_count <- as.factor(coord$total_count)
+coord$typo_pla <- as.factor(coord$typo_pla)
+ 
+map <- ggplot() +
+  geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
+  geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
+  geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
+  geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) +  
+  geom_point(data = coord, aes(x = long, y = lat, fill = total_count, shape = typo_pla), colour = "black", size = 1.75) +
+  annotation_scale(location = "bl", width_hint = 0.1) +
+  annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
+  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
+  scale_fill_manual(values = c("#7fc97f", "#beaed4", "#fdc086", "#ffff99")) +
+  scale_shape_manual(values = c(21, 22, 24, 23))  +
+  map_theme +
+  theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
+        strip.text.x = element_text(size = 12, color = "black", face = "bold"),
+        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
+map
+#5 x 5

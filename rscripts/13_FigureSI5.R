@@ -7,27 +7,24 @@ rm(list = ls()) #Removes all objects from the current workspace (R memory)
 ##PACKAGES##
 library(cowplot)
 library(dplyr)
-library(ggbeeswarm)
-library(ggbreak)
 library(ggh4x)
+library(ggpattern)
 library(ggplot2)
+library(ggpmisc)
 library(ggpubr)
-library(ggspatial)
 library(kableExtra)
 library(lemon)
+library(lme4)
+library(piecewiseSEM)
 library(purrr)
-library(rgdal)
-library(rnaturalearth)
-library(rstatix)
-library(sf)
+library(semEff)
 library(stringr)
 library(tidyr)
-library(tidyverse)
 
 
 ##FUNCTIONS##
 source("./rfunctions/misc.R")
-source("./rfunctions/theme_map.R")
+source("./rfunctions/vif_func.R")
 
 
 ##--------------
@@ -42,47 +39,38 @@ myload(dataset_9BSCBenthicPelagicGillnetSelectivity,
 ##----------------
 summary(dataset_9BSCBenthicPelagicGillnetSelectivity)
 dataset.thermal.trajectories <- dataset_9BSCBenthicPelagicGillnetSelectivity
-count.per.lake <- dataset.thermal.trajectories %>% dplyr::group_by(lake.code) %>% 
-  dplyr::summarise(total_count = n(),.groups = 'drop') %>%
-  as.data.frame()
+dataset.thermal.trajectories$native.richness <- dataset.thermal.trajectories$fish.richness - dataset.thermal.trajectories$nis.richness
+summary(dataset.thermal.trajectories)
 
+##------------
+## CORRELATION
+##------------
+dataset.thermal.trajectories %>%
+  ggplot(aes(y = native.richness, x = nis.richness)) +
+  geom_point(size = 3, shape = 21, color = "black", fill = "#bdbdbd") + guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
+  stat_poly_line(color = "#737373", fill = "#d9d9d9") +
+  stat_cor(method = "spearman", label.x = 5, label.y = 14, size = 3) +
+  scale_y_continuous(breaks = c(0, 5, 10, 15), limits = c(0, 15)) +
+  scale_x_continuous(breaks = c(0, 2, 4, 6), limits = c(0, 6)) +
+  guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
+  labs(y = "Number of native fish species", x = "Number of exotic fish species") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
+  theme_classic() + 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 12, colour = "#000000"),
+        axis.title = element_text(size = 14, face = "bold", colour = "#000000"))
 
-##------------------------------
-## SPATIAL DISTRIBUTION OF LAKES
-##------------------------------
-worldmap <- ne_countries(continent = 'europe', scale = 'large', type = 'countries', returnclass = 'sf')
-fr <- data.frame(Country = "France", Focus = "YES") 
-world_joined <- left_join(worldmap, fr, by = c("name" = "Country"))
-
-francemap <- ne_countries(country = 'france', scale = 'large', type = 'countries', returnclass = 'sf')
-
-lakes <- ne_download(scale = 10, type = 'lakes', category = 'physical')
-
-rivers <- ne_download(scale = 10, type = 'rivers_lake_centerlines', category = 'physical')
-
-sf::sf_use_s2(FALSE)
-francelakes <- st_intersection(st_as_sf(lakes), st_as_sf(francemap))
-francerivers <- st_intersection(st_as_sf(rivers), st_as_sf(francemap))
-
-coord <- dataset.thermal.trajectories %>% dplyr::select(lake.code, lat, long) %>% unique(.)
-coord <- left_join(coord, count.per.lake, by = 'lake.code')
-str(coord)
-coord$total_count <- as.factor(coord$total_count)
-
- 
-map <- ggplot() +
-  geom_sf(data = world_joined, fill = "white", color = "black", size = 0.05) +
-  geom_sf(data = francemap, fill = gray(0.9), color = "black", size = 0.25) +
-  geom_sf(data = francerivers, col = '#6baed6', size = 0.25) +  
-  geom_sf(data = francelakes, col = '#6baed6', fill = '#6baed6', size = 0.05) +  
-  geom_point(data = coord, aes(x = long, y = lat, fill = total_count), shape = 21, colour = "black", size = 1.75) +
-  annotation_scale(location = "bl", width_hint = 0.1) +
-  annotation_north_arrow(which_north = "true", location = "tr", height = unit(0.5, "cm"), width = unit(0.5, "cm"), style = north_arrow_orienteering(fill = c("black", "black"), text_size = 6)) +           
-  coord_sf(xlim = c(-5, 9.75), ylim = c(41.3, 51.5), expand = FALSE) +
-  scale_fill_manual(values = c("#7fc97f", "#beaed4", "#fdc086", "#ffff99")) +
-  map_theme +
-  theme(strip.background = element_rect(color = "black", size = 1, linetype = "solid"),
-        strip.text.x = element_text(size = 12, color = "black", face = "bold"),
-        panel.border = element_rect(colour = "black", fill = NA, size = 1)) + theme(legend.position = "none")
-map
-#5 x 5
+dataset.thermal.trajectories %>%
+  ggplot(aes(y = fish.richness, x = nis.richness)) +
+  geom_point(size = 3, shape = 21, color = "black", fill = "#bdbdbd") + guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
+  stat_poly_line(color = "#737373", fill = "#d9d9d9") +
+  stat_cor(method = "spearman", label.x = 5, label.y = 19, size = 3) +
+  scale_y_continuous(breaks = c(0, 5, 10, 15, 20), limits = c(0, 20)) +
+  scale_x_continuous(breaks = c(0, 2, 4, 6), limits = c(0, 6)) +
+  guides(y = guide_axis_truncated(), x = guide_axis_truncated()) +
+  labs(y = "Number of native and exotic fish", x = "Number of exotic fish") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line()) +
+  theme_classic() + 
+  theme(legend.position = "none",
+        axis.text = element_text(size = 12, colour = "#000000"),
+        axis.title = element_text(size = 14, face = "bold", colour = "#000000"))
