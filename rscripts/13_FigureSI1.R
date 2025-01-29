@@ -67,6 +67,9 @@ francerivers <- st_intersection(st_as_sf(rivers), st_as_sf(francemap))
 coord <- dataset.thermal.trajectories %>% dplyr::select(lake.code, lat, long) %>% unique(.)
 coord <- left_join(coord, count.per.lake, by = 'lake.code')
 coord <- left_join(coord, lake.type, by = 'lake.code')
+coord <- coord %>%
+  mutate(typo_pla = ifelse(typo_pla == "C", "A", typo_pla)) %>%
+  mutate(typo_pla = ifelse(typo_pla == "E", "A", typo_pla))
 str(coord)
 coord$total_count <- as.factor(coord$total_count)
 coord$typo_pla <- as.factor(coord$typo_pla)
