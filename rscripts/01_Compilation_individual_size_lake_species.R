@@ -10,8 +10,7 @@ source_url("https://raw.githubusercontent.com/alaindanet/SizeTrophicInteractions
 ##--------------
 ## LOAD DATASETS
 ##--------------
-db.fish <- read.csv("data/fish_data.csv") #fish_data.csv is too large to be on github ; it is listed in gitignore
-
+db.fish <- read.csv("data/fish_data.txt", sep="")
 
 ##--------------------
 ## DATASET EXPLORATION
@@ -48,22 +47,17 @@ nrow(db.fish)
   db.fish <- db.fish %>% filter(!(nom_latin_taxon %in% c("Astacus astacus", "Eriocheir sinensis", "Orconectes limosus", "Pacifastacus leniusculus", "Procambarus clarkii")))
 
   ##Analysis dataset  
-  sub.db.fish <- db.fish %>% select(code_lac, camp_annee, id_campagne, id_prelev_poisson, id_point_prelev,
-                                    coord_x, coord_y, cd_proj, date_pose, heure_pose, date_releve, heure_releve,
-                                    prof_min_point_pose, prof_max_point_pose, cd_engin_peche, strate,
-                                    ident_lot, nom_latin_taxon, cd_type_lot, effectif_lot, taille_min_lot, taille_max_lot, taille_ind, type_longueur)
-
-  unique(sub.db.fish$cd_type_lot)
-  sub.db.fish$cd_type_lot[sub.db.fish$cd_type_lot == "L"] <- "S/L"
-  sub.db.fish$cd_type_lot[sub.db.fish$cd_type_lot == "S"] <- "S/L"
-  sub.db.fish$cd_type_lot[sub.db.fish$cd_type_lot == "0"] <- NA
-  sub.db.fish <- sub.db.fish %>% drop_na(cd_type_lot)
-  unique(sub.db.fish$cd_type_lot)
+  unique(db.fish$cd_type_lot)
+  db.fish$cd_type_lot[db.fish$cd_type_lot == "L"] <- "S/L"
+  db.fish$cd_type_lot[db.fish$cd_type_lot == "S"] <- "S/L"
+  db.fish$cd_type_lot[db.fish$cd_type_lot == "0"] <- NA
+  db.fish <- db.fish %>% drop_na(cd_type_lot)
+  unique(db.fish$cd_type_lot)
   
-  sub.db.fish$taille_ind[sub.db.fish$taille_ind == 0] <- NA
+  db.fish$taille_ind[db.fish$taille_ind == 0] <- NA
   
-  unique(sub.db.fish$strate)
-  unique(sub.db.fish$cd_engin_peche) #FB : Filet benthique ; FP : Filet pelagique ; FPa : 2 filets pelagiques consideres comme 1 seul filet
+  unique(db.fish$strate)
+  unique(db.fish$cd_engin_peche) #FB : Filet benthique ; FP : Filet pelagique ; FPa : 2 filets pelagiques consideres comme 1 seul filet
   
   
   
@@ -71,8 +65,8 @@ nrow(db.fish)
 ##----------------------------
 ## COMPILATION INDIVIDUAL SIZE
 ##----------------------------
-for (i in 1:length(unique(sub.db.fish$code_lac))){
-  sub.lake <- sub.db.fish %>% filter(code_lac == unique(sub.db.fish$code_lac)[i])
+for (i in 1:length(unique(db.fish$code_lac))){
+  sub.lake <- db.fish %>% filter(code_lac == unique(db.fish$code_lac)[i])
   
   for (j in 1:length(unique(sub.lake$camp_annee))){
     sub.year <- sub.lake %>% filter(camp_annee == unique(sub.lake$camp_annee)[j])
